@@ -3,11 +3,11 @@ body {
   background-color: #202020;
 }
 a {
-  color: #5090ff;
+  color: #647b87;
   text-decoration: none;
 }
 a:hover, a:active {
-  color: #80d0ff;
+  color: #4d6470;
 }
 pre, code {
   background-color: inherit;

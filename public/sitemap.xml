@@ -14,16 +14,20 @@
     <loc>http://localhost:1313/MonoBlog/tags/</loc>
     <lastmod>2024-07-26T17:20:30+02:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/MonoBlog/categories/</loc>
+    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/MonoBlog/tags/markdown/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/MonoBlog/test/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/tags/text/</loc>
+    <loc>http://localhost:1313/MonoBlog/categories/test-site/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/categories/</loc>
+    <loc>http://localhost:1313/MonoBlog/tags/text/</loc>
+    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/MonoBlog/series/</loc>
   </url>
