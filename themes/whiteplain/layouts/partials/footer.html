@@ -13,8 +13,5 @@
     <li class="site-footer-item-{{ .Identifier }}"><a href="{{ .URL | safeURL }}" title="{{ .Name }}">{{ .Name }}</a></li>
     {{- end }}
   </ul>
-  <div class="powerdby">
-    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
-  </div>
 </div>
 {{ template "_internal/google_analytics.html" . }}

@@ -15,5 +15,19 @@
       <guid>http://localhost:1313/MonoBlog/tags/hi/</guid>
       <description></description>
     </item>
+    <item>
+      <title>Markdown</title>
+      <link>http://localhost:1313/MonoBlog/tags/markdown/</link>
+      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/MonoBlog/tags/markdown/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Text</title>
+      <link>http://localhost:1313/MonoBlog/tags/text/</link>
+      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/MonoBlog/tags/text/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
