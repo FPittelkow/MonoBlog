@@ -1,8 +1,10 @@
 baseURL = 'https://fpittelkow.github.io/MonoBlog/'
+canonifyurls = true
 
 languageCode = 'en-us'
 title = 'MonoBlog'
 theme = 'whiteplain'
+
 
 
 [taxonomies]
