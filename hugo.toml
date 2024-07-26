@@ -1,4 +1,4 @@
-baseURL = 'https://fpittelkow.github.io/MonoBlog'
+baseURL = 'https://fpittelkow.github.io/MonoBlog/'
 languageCode = 'en-us'
 title = 'MonoBlog'
 theme = 'whiteplain'
