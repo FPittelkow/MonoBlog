@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hi on MonoBlog</title>
+    <link>http://localhost:1313/MonoBlog/tags/hi/</link>
+    <description>Recent content in Hi on MonoBlog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 26 Jul 2024 17:20:30 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/MonoBlog/tags/hi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hi</title>
+      <link>http://localhost:1313/MonoBlog/hi/</link>
+      <pubDate>Fri, 26 Jul 2024 17:20:30 +0200</pubDate>
+      <guid>http://localhost:1313/MonoBlog/hi/</guid>
+      <description>Hi</description>
+    </item>
+  </channel>
+</rss>
