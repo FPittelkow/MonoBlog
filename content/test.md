@@ -7,8 +7,8 @@ tags = [
     "markdown",
     "text",
 ]
-toc = true
 categories = ["test site"]
+toc = false
 +++
 
 ## Test
