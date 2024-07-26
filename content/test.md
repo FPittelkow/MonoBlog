@@ -8,7 +8,7 @@ tags = [
     "text",
 ]
 categories = ["test site"]
-toc = false
+toc = true
 +++
 
 ## Test
