@@ -1,0 +1,21 @@
+baseURL = 'https://fpittelkow.github.io/MonoBlog'
+languageCode = 'en-us'
+title = 'MonoBlog'
+theme = 'whiteplain'
+
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  series = "series"
+
+[[menu.main]]
+  name = "Categories"
+  identifier = "categories"
+  url = "/categories/"
+  weight = 1
+[[menu.main]]
+  name = "Tags"
+  identifier = "tags"
+  url = "/tags/"
+  weight = 2
