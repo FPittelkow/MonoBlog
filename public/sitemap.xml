@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/MonoBlog/kunst-kuenstler/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/kunst-kuenstler/</loc>
     <lastmod>2024-07-26T19:19:28+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/</loc>
     <lastmod>2024-07-26T19:19:28+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/tags/art-philosophy/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/tags/art-philosophy/</loc>
     <lastmod>2024-07-26T19:11:45+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/tags/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/tags/</loc>
     <lastmod>2024-07-26T19:11:45+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/artist-as-a-sieve/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/artist-as-a-sieve/</loc>
     <lastmod>2024-07-26T19:11:45+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/tags/hi/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/tags/hi/</loc>
     <lastmod>2024-07-26T17:20:30+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/hi/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/hi/</loc>
     <lastmod>2024-07-26T17:20:30+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/categories/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/categories/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/tags/markdown/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/tags/markdown/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/test/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/test/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/categories/test-site/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/categories/test-site/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/tags/text/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/tags/text/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/MonoBlog/series/</loc>
+    <loc>https://fpittelkow.github.io/MonoBlog/series/</loc>
   </url>
 </urlset>

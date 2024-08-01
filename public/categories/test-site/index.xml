@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Test Site on MonoBlog</title>
-    <link>http://localhost:1313/MonoBlog/categories/test-site/</link>
+    <link>https://fpittelkow.github.io/MonoBlog/categories/test-site/</link>
     <description>Recent content in Test Site on MonoBlog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 09 Mar 2019 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/MonoBlog/categories/test-site/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://fpittelkow.github.io/MonoBlog/categories/test-site/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Placeholder Text</title>
-      <link>http://localhost:1313/MonoBlog/test/</link>
+      <link>https://fpittelkow.github.io/MonoBlog/test/</link>
       <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/MonoBlog/test/</guid>
+      <guid>https://fpittelkow.github.io/MonoBlog/test/</guid>
       <description>&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;&#xA;&lt;p&gt;Lorem est tota propiore conpellat pectoribus de pectora summo.&lt;/p&gt;</description>
     </item>
   </channel>
