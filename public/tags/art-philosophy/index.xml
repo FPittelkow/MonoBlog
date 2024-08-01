@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Art, Philosophy on MonoBlog</title>
+    <link>http://localhost:1313/MonoBlog/tags/art-philosophy/</link>
+    <description>Recent content in Art, Philosophy on MonoBlog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 26 Jul 2024 19:11:45 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/MonoBlog/tags/art-philosophy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Artist as a Sieve: Filtering Inspiration and Crafting Originality</title>
+      <link>http://localhost:1313/MonoBlog/artist-as-a-sieve/</link>
+      <pubDate>Fri, 26 Jul 2024 19:11:45 +0200</pubDate>
+      <guid>http://localhost:1313/MonoBlog/artist-as-a-sieve/</guid>
+      <description>The art world constantly discusses the processes and techniques that artists use to create their works. One such metaphor is that of the artist as a sieve; the artist uses their unique perspective and experiences to sift through the world&amp;rsquo;s chaos, selecting what will inspire their art. Through this process, they create something new and present it to the audience, who will have their own interpretations and reactions. In this paper, we will explore the metaphor of the artist as a sieve, its implications, and its relation to the act of creating art.</description>
+    </item>
+  </channel>
+</rss>
