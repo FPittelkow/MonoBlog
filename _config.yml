@@ -29,10 +29,14 @@ email: post@monointerferenz.de
 navigation:
   - text: Home
     url: /
+
+
   - text: Text
     url: /text
   - text: Tools
     url: /tools
+  - text: Artifacts
+    url: /artifacts
   - text: Tags
     url: /tags
     secondary: true
