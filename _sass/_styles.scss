@@ -146,107 +146,8 @@
     width: 100%;
     margin-bottom: 2rem;
     overflow-x: auto;
-    background:
-      linear-gradient(90deg, rgba(37, 42, 46, 0.035) 1px, transparent 1px),
-      linear-gradient(180deg, rgba(37, 42, 46, 0.035) 1px, transparent 1px);
-    background-size: 36px 36px;
     border-top: 1px solid currentColor;
     border-bottom: 1px solid currentColor;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  &-tag-graph-meta {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    display: flex;
-    width: 100%;
-    min-width: 0;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.65rem 0.75rem;
-    background-color: #fff;
-    border-bottom: 1px solid rgba(37, 42, 46, 0.2);
-    font-size: 0.85rem;
-  }
-
-  &-tag-graph-meta [data-tag-graph-status] {
-    min-width: 0;
-    flex: 1;
-    font-weight: 700;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &-tag-graph-clear {
-    border: 1px solid currentColor;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    font: inherit;
-    padding: 0.15rem 0.45rem;
-  }
-
-  &-tag-graph-clear:hover,
-  &-tag-graph-clear:focus {
-    background: #252a2e;
-    color: #fff;
-  }
-
-  &-tag-graph-details {
-    position: sticky;
-    left: 0;
-    display: grid;
-    grid-template-columns: minmax(12rem, 1.25fr) minmax(10rem, 1fr) minmax(12rem, 1fr);
-    gap: 1rem;
-    width: 100%;
-    min-width: 0;
-    padding: 0.85rem 0.75rem 1rem;
-    background-color: rgba(255, 255, 255, 0.92);
-    border-top: 1px solid rgba(37, 42, 46, 0.2);
-  }
-
-  &-tag-graph-details strong {
-    display: block;
-    margin: 0.25rem 0;
-    line-height: 1.35;
-  }
-
-  &-tag-graph-details p {
-    margin: 0;
-  }
-
-  &-tag-graph-kicker {
-    display: block;
-    font-size: 0.75rem;
-    opacity: 0.62;
-    text-transform: uppercase;
-  }
-
-  &-tag-graph-pills,
-  &-tag-graph-posts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-
-  &-tag-graph-pill,
-  &-tag-graph-post-link {
-    display: inline-block;
-    padding: 0.12rem 0.35rem;
-    border: 1px solid currentColor;
-    line-height: 1.35;
-    text-decoration: none;
-  }
-
-  &-tag-graph-post-link {
-    max-width: 100%;
-    overflow-wrap: anywhere;
-  }
-
-  &-tag-graph-empty {
-    opacity: 0.62;
   }
 
   &-tag-graph-svg {
@@ -259,48 +160,31 @@
   &-tag-graph-edge {
     fill: none;
     stroke: currentColor;
-    stroke-dasharray: 4 8;
-    stroke-linecap: round;
-    stroke-opacity: 0.2;
+    stroke-opacity: 0.18;
     stroke-width: 1;
     transition: stroke-opacity 0.15s ease, stroke-width 0.15s ease;
-  }
-
-  &-tag-graph-relation {
-    fill: none;
-    stroke: currentColor;
-    stroke-opacity: 0.1;
-    stroke-width: 1;
-    transition: opacity 0.15s ease, stroke-opacity 0.15s ease, stroke-width 0.15s ease;
   }
 
   &-tag-graph-tag {
     fill: transparent;
     stroke: currentColor;
     stroke-width: 1;
-    transition: fill 0.15s ease, opacity 0.15s ease, stroke-width 0.15s ease;
+    transition: opacity 0.15s ease, stroke-width 0.15s ease;
   }
 
   &-tag-graph-post {
     fill: transparent;
     stroke: currentColor;
     stroke-width: 1;
-    transition: fill 0.15s ease, opacity 0.15s ease, stroke-width 0.15s ease;
+    transition: opacity 0.15s ease, stroke-width 0.15s ease;
   }
 
   &-tag-graph-label,
   &-tag-graph-post-label,
-  &-tag-graph-count,
-  &-tag-graph-axis-label {
+  &-tag-graph-count {
     fill: currentColor;
     font-size: 12px;
     pointer-events: none;
-  }
-
-  &-tag-graph-axis-label {
-    font-size: 11px;
-    opacity: 0.55;
-    text-transform: uppercase;
   }
 
   &-tag-graph-post-label {
@@ -327,7 +211,7 @@
   &-tag-graph-link:focus &-tag-graph-tag,
   &-tag-graph-link:hover &-tag-graph-post,
   &-tag-graph-link:focus &-tag-graph-post {
-    fill: rgba(37, 42, 46, 0.06);
+    fill: transparent;
     stroke: currentColor;
   }
 
@@ -337,20 +221,13 @@
   }
 
   &-tag-graph-edge.is-muted,
-  &-tag-graph-relation.is-muted,
   &-tag-graph-tag.is-muted,
   &-tag-graph-post.is-muted {
     opacity: 0.18;
   }
 
-  &-tag-graph-relation.is-active {
-    stroke-opacity: 0.65;
-    stroke-width: 2;
-  }
-
   &-tag-graph-tag.is-active,
   &-tag-graph-post.is-active {
-    fill: rgba(37, 42, 46, 0.08);
     stroke-width: 2;
   }
 
@@ -461,26 +338,6 @@
 
     &-tag-graph-svg {
       min-width: 36rem;
-    }
-
-    &-tag-graph-meta {
-      flex-wrap: wrap;
-      gap: 0.45rem 0.65rem;
-      padding-right: 0.6rem;
-      padding-left: 0.6rem;
-    }
-
-    &-tag-graph-meta [data-tag-graph-status] {
-      flex-basis: 100%;
-      order: 3;
-      white-space: normal;
-    }
-
-    &-tag-graph-details {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-      padding-right: 0.6rem;
-      padding-left: 0.6rem;
     }
 
     &-cards.grid {
