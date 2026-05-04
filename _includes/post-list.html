@@ -1,0 +1,44 @@
+{% assign posts = site.posts %}
+{% if include.category %}
+  {% assign posts = site.categories[include.category] %}
+{% endif %}
+
+{% if posts.size > 0 %}
+  {% for post in posts %}
+    <div class="media t-hackcss-media">
+      <div class="media-body">
+        <div class="media-heading">
+          <span>
+            {% if post.external_url %}
+              <a href="{{ post.external_url }}" target="_blank" title="{{ post.title }}">
+                {{ post.title }}
+              </a>
+            {% else %}
+              <a href="{{ post.url | prepend: site.baseurl }}" title="{{ post.title }}">
+                {{ post.title }}
+              </a>
+            {% endif %}
+          </span>
+        </div>
+
+        {% if post.short_description %}
+          <div class="media-content">
+            {{ post.short_description }}
+          </div>
+        {% endif %}
+
+        {% if post.tags.size > 0 %}
+          <div class="t-hackcss-post-tags">
+            {% for tag in post.tags %}
+              {% assign tag_slug = tag | slugify %}
+              <a class="t-hackcss-post-tag"
+                 href="{{ "/tags#tag-" | append: tag_slug | prepend: site.baseurl }}">{{ tag }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No posts found.</p>
+{% endif %}

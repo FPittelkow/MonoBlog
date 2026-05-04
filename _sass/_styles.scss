@@ -1,0 +1,209 @@
+// This file contains custom (non hack.css) styles
+
+.t-hackcss {  // Main prefix to avoid collisions
+
+  // navigation.html
+
+  &-navigation {
+    padding-right: $spacing-unit;
+  }
+
+  &-navigation-separator {
+    height: $spacing-unit;
+  }
+
+  &-navigation-secondary {
+    font-size: 0.9rem;
+    opacity: 0.72;
+  }
+
+  @at-root .hack &-navigation-heading {
+    padding-top: 20px;
+  }
+
+  // footer.html
+
+  @at-root body &-footer {
+    padding-bottom: $spacing-unit;
+  }
+
+  &-social {
+    display: inline-block;
+  }
+
+  &-social + &-social {
+    padding-left: $spacing-unit;
+  }
+
+  &-sm-reversed-grid.grid {
+    @include media-query($on-palm) {
+      flex-direction: column-reverse;
+    }
+  }
+
+  &-icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: $icon-size;
+    height: $icon-size;
+
+    > svg {
+      width: $icon-size;
+    }
+  }
+
+  // examples.html
+
+  &-media {
+    margin-bottom: 1.25rem;
+  }
+
+  &-post-tags {
+    margin-top: 0.35rem;
+  }
+
+  &-post-tag {
+    display: inline-block;
+    margin-right: 0.35rem;
+    margin-bottom: 0.35rem;
+    padding: 0.1rem 0.35rem;
+    border: 1px solid currentColor;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+
+  &-search-count {
+    min-height: 1.5rem;
+  }
+
+  &-tag-graph {
+    width: 100%;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+  }
+
+  &-tag-graph-svg {
+    display: block;
+    width: 100%;
+    min-width: 640px;
+    height: auto;
+  }
+
+  &-tag-graph-edge {
+    fill: none;
+    stroke: currentColor;
+    stroke-opacity: 0.18;
+    stroke-width: 1;
+    transition: stroke-opacity 0.15s ease, stroke-width 0.15s ease;
+  }
+
+  &-tag-graph-tag {
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 1;
+    transition: opacity 0.15s ease, stroke-width 0.15s ease;
+  }
+
+  &-tag-graph-post {
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 1;
+    transition: opacity 0.15s ease, stroke-width 0.15s ease;
+  }
+
+  &-tag-graph-label,
+  &-tag-graph-post-label,
+  &-tag-graph-count {
+    fill: currentColor;
+    font-size: 12px;
+    pointer-events: none;
+  }
+
+  &-tag-graph-post-label {
+    font-size: 11px;
+  }
+
+  &-tag-graph-count {
+    font-size: 11px;
+    opacity: 0.68;
+  }
+
+  &-tag-graph-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &-tag-graph-link:hover,
+  &-tag-graph-link:focus {
+    background: transparent;
+    color: inherit;
+  }
+
+  &-tag-graph-link:hover &-tag-graph-tag,
+  &-tag-graph-link:focus &-tag-graph-tag,
+  &-tag-graph-link:hover &-tag-graph-post,
+  &-tag-graph-link:focus &-tag-graph-post {
+    fill: transparent;
+    stroke: currentColor;
+  }
+
+  &-tag-graph-edge.is-active {
+    stroke-opacity: 0.85;
+    stroke-width: 2;
+  }
+
+  &-tag-graph-edge.is-muted,
+  &-tag-graph-tag.is-muted,
+  &-tag-graph-post.is-muted {
+    opacity: 0.18;
+  }
+
+  &-tag-graph-tag.is-active,
+  &-tag-graph-post.is-active {
+    stroke-width: 2;
+  }
+
+  &-tag-section {
+    margin-bottom: 1.5rem;
+  }
+
+  &-media-shift {
+    max-width: $image-size;
+  }
+
+  &-media-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  &-cards {
+    flex-wrap: wrap;
+    @include media-query($on-palm) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  &-cards-cell {
+    padding-bottom: $spacing-unit;
+    padding-right: $spacing-unit;
+  }
+
+  &-cards-text {
+    margin: 0
+  }
+
+  &-cards-image {
+    display: block;
+    max-width: 50%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  &-cards-link {
+    text-align: center;
+  }
+}
