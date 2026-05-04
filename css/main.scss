@@ -35,5 +35,5 @@ $on-palm:          768px;
         "highlight"
 ;
 
-@use "styles";
-@use "highlight";
+@import "styles";
+@import "highlight";
