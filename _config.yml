@@ -9,9 +9,7 @@
 title: MonoBlog
 description: > # this means to ignore newlines until "baseurl:"
 repository: FPittelkow/MonoBlog
-
 url: "https://blog.monointerferenz.de"
-
 baseurl: ""
 
 # Build settings
