@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 source "https://rubygems.org"
 
-ruby "4.0.3"
-
-gem "jekyll"
+gem "jekyll", "~> 4.4"
 # gem "jekyll-seo-tag"

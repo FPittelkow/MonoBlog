@@ -3,5 +3,6 @@
 ---
 @charset "utf-8";
 
-@use "styles";
-@use "highlight";
+// Load partials from `sass_dir` (defaults to `_sass`)
+@use "styles" as *;
+@use "highlight" as *;
