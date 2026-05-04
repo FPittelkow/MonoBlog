@@ -2,6 +2,70 @@
 
 .t-hackcss {  // Main prefix to avoid collisions
 
+  @at-root {
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: #fff;
+      color: #252a2e;
+      overflow-x: hidden;
+    }
+
+    body.hack.dark {
+      background-color: #000;
+      color: #ccc;
+    }
+
+    img,
+    svg,
+    video,
+    iframe {
+      max-width: 100%;
+      height: auto;
+    }
+
+    aside,
+    main,
+    .media,
+    .media-body,
+    .post-content {
+      min-width: 0;
+    }
+
+    main,
+    .post-content,
+    .media-content {
+      overflow-wrap: break-word;
+    }
+
+    .post-content a,
+    .media-heading a,
+    .t-hackcss-post-tag {
+      overflow-wrap: anywhere;
+    }
+
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    pre code {
+      overflow-wrap: normal;
+      white-space: pre;
+      word-break: normal;
+    }
+
+    table {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
   // navigation.html
 
   &-navigation {
@@ -205,5 +269,134 @@
 
   &-cards-link {
     text-align: center;
+  }
+
+  @include media-query($on-palm) {
+    @at-root {
+      .container {
+        max-width: 100%;
+        padding-right: 1.25rem;
+        padding-left: 1.25rem;
+      }
+
+      .container > .grid {
+        gap: 1.25rem;
+      }
+
+      aside.cell,
+      main.cell {
+        width: 100%;
+        max-width: 100%;
+        flex-basis: auto;
+      }
+
+      .media-left,
+      .media-right,
+      .media-body {
+        display: block;
+        width: 100%;
+      }
+
+      .media-left,
+      .media-right {
+        padding-right: 0;
+        padding-left: 0;
+      }
+
+      pre {
+        padding: 1rem;
+      }
+
+      .form {
+        max-width: 100%;
+      }
+    }
+
+    &-navigation {
+      padding-right: 0;
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid currentColor;
+    }
+
+    &-navigation-heading {
+      margin-bottom: 0.75rem;
+    }
+
+    &-navigation-separator {
+      flex-basis: 100%;
+      height: 0;
+      margin: 0.15rem 0;
+      border-top: 1px solid currentColor;
+      opacity: 0.25;
+    }
+
+    &-media {
+      margin-bottom: 1.5rem;
+    }
+
+    &-tag-graph-svg {
+      min-width: 36rem;
+    }
+
+    &-cards.grid {
+      flex-direction: column;
+      flex-wrap: wrap;
+    }
+
+    &-cards-cell {
+      width: 100%;
+      padding-right: 0;
+    }
+
+    &-cards-image {
+      max-width: 9rem;
+    }
+
+    @at-root {
+      .menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem 0.65rem;
+      }
+
+      .menu .menu-item {
+        display: inline-flex;
+        width: auto;
+        align-items: center;
+        padding: 0.15rem 0;
+        gap: 0.25rem;
+      }
+
+      .menu .menu-item .pull-right {
+        float: none;
+        margin-left: 0.1rem;
+      }
+    }
+  }
+
+  @include media-query(480px) {
+    @at-root {
+      .container {
+        padding-right: 0.85rem;
+        padding-left: 0.85rem;
+      }
+
+      .standard h1 {
+        font-size: 1.65em;
+      }
+
+      .standard h2 {
+        font-size: 1.3em;
+      }
+
+      pre {
+        padding: 0.75rem;
+      }
+    }
+
+    &-tag-graph-svg {
+      min-width: 32rem;
+    }
   }
 }
