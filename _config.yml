@@ -12,6 +12,8 @@ repository: FPittelkow/MonoBlog
 url: "https://blog.monointerferenz.de"
 baseurl: ""
 
+timezone: Europe/Brussels
+
 # Build settings
 markdown: kramdown
 
