@@ -2,6 +2,7 @@
 layout: post
 title: The Weeping Greenhouse
 categories: artifact
+date: 2026-05-04
 tags:
   - installation
   - environment
