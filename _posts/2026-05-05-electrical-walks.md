@@ -2,7 +2,7 @@
 layout: post
 title: Electrical Walks
 categories: artifact
-date: 2026-05-04
+date: 2026-05-05
 tags:
   - installation
   - sound
