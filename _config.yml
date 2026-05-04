@@ -22,7 +22,6 @@ sass:
 # Theme settings
 theme_mode: standard  # choices are: 'dark', 'standard', 'markdown'
 
-future: true
 
 # Customizations
 your_name: monointerferenz
