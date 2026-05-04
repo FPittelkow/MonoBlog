@@ -1,0 +1,13 @@
+// Shared Sass variables and mixins.
+
+$spacing-unit: 10px;
+$image-size: 50px;
+$icon-size: 15px;
+
+$on-palm: 768px;
+
+@mixin media-query($device) {
+  @media screen and (max-width: $device) {
+    @content;
+  }
+}

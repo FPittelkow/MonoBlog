@@ -3,6 +3,7 @@
 ---
 @charset "utf-8";
 
+<<<<<<< HEAD
 
 
 // Our variables
@@ -35,3 +36,7 @@ $on-palm:          768px;
         "styles",
         "highlight"
 ;
+=======
+@use "styles";
+@use "highlight";
+>>>>>>> parent of 8ca7918 (Update)
