@@ -9,8 +9,8 @@
 title: MonoBlog
 description: > # this means to ignore newlines until "baseurl:"
 repository: https://github.com/FPittelkow/MonoBlog
-baseurl: https://fpittelkow.github.io # the subpath of your site, e.g. /blog
-url: https://fpittelkow.github.io  # the base hostname & protocol for your site
+baseurl: https://fpittelkow.github.io/MonoBlog # the subpath of your site, e.g. /blog
+url: https://fpittelkow.github.io/MonoBlog  # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown
