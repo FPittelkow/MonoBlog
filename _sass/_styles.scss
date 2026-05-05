@@ -167,6 +167,15 @@
     transition: stroke-opacity 0.15s ease, stroke-width 0.15s ease;
   }
 
+  &-tag-graph-tag-edge {
+    fill: none;
+    stroke: currentColor;
+    stroke-dasharray: 3 4;
+    stroke-opacity: 0.12;
+    stroke-width: 1;
+    transition: opacity 0.15s ease, stroke-opacity 0.15s ease, stroke-width 0.15s ease;
+  }
+
   &-tag-graph-tag {
     fill: transparent;
     stroke: currentColor;
@@ -222,7 +231,13 @@
     stroke-width: 2;
   }
 
+  &-tag-graph-tag-edge.is-active {
+    stroke-opacity: 0.55;
+    stroke-width: 1.5;
+  }
+
   &-tag-graph-edge.is-muted,
+  &-tag-graph-tag-edge.is-muted,
   &-tag-graph-tag.is-muted,
   &-tag-graph-post.is-muted {
     opacity: 0.18;
@@ -231,6 +246,56 @@
   &-tag-graph-tag.is-active,
   &-tag-graph-post.is-active {
     stroke-width: 2;
+  }
+
+  &-tag-graph-tag.is-selected {
+    fill: currentColor;
+    fill-opacity: 0.06;
+  }
+
+  &-tag-insight {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid currentColor;
+  }
+
+  &-tag-insight h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  &-tag-insight-summary {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  &-tag-insight-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 0.85rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  &-tag-insight-tags li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.1rem 0.35rem;
+    border: 1px solid currentColor;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  &-tag-insight-tags span {
+    opacity: 0.68;
+  }
+
+  &-tag-insight-posts {
+    margin: 0;
+    padding-left: 1.25rem;
   }
 
   &-tag-section {
