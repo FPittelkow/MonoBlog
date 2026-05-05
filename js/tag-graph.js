@@ -8,11 +8,12 @@
     return;
   }
 
-  var width = 860;
-  var tagGap = 58;
+  var isMobileGraph = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+  var width = isMobileGraph ? 320 : 860;
+  var tagGap = isMobileGraph ? 44 : 58;
   var postGap = 78;
-  var topPadding = 54;
-  var bottomPadding = 54;
+  var topPadding = isMobileGraph ? 28 : 54;
+  var bottomPadding = isMobileGraph ? 28 : 54;
   var ns = 'http://www.w3.org/2000/svg';
   var selectedTagIds = [];
 
@@ -23,7 +24,7 @@
       id: 'tag-' + slug(tag.name),
       name: tag.name,
       count: tag.count,
-      x: 190,
+      x: isMobileGraph ? 160 : 190,
       y: topPadding + index * tagGap
     };
   });
@@ -42,13 +43,16 @@
     };
   });
 
-  var height = Math.max(
-    300,
-    topPadding + bottomPadding + Math.max((tagNodes.length - 1) * tagGap, (postNodes.length - 1) * postGap)
-  );
+  var height = isMobileGraph ?
+    Math.max(220, topPadding + bottomPadding + Math.max(0, (tagNodes.length - 1) * tagGap)) :
+    Math.max(
+      300,
+      topPadding + bottomPadding + Math.max((tagNodes.length - 1) * tagGap, (postNodes.length - 1) * postGap)
+    );
 
   svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
   svg.innerHTML = '<title id="tag-graph-title">Post tag graph</title>';
+  graph.classList.toggle('is-mobile-tag-list', isMobileGraph);
 
   function create(name, attrs) {
     var node = document.createElementNS(ns, name);
@@ -142,13 +146,15 @@
     });
   });
 
-  tagConnections.forEach(function (connection) {
-    svg.appendChild(connection.path);
-  });
+  if (!isMobileGraph) {
+    tagConnections.forEach(function (connection) {
+      svg.appendChild(connection.path);
+    });
 
-  edges.forEach(function (edge) {
-    svg.appendChild(edge.path);
-  });
+    edges.forEach(function (edge) {
+      svg.appendChild(edge.path);
+    });
+  }
 
   tagNodes.forEach(function (tag) {
     var link = create('a', { href: '#tag-' + slug(tag.name) });
@@ -156,35 +162,37 @@
     link.setAttribute('data-tag', tag.id);
     link.setAttribute('aria-pressed', 'false');
     link.appendChild(create('rect', {
-      x: tag.x - 112,
+      x: tag.x - (isMobileGraph ? 140 : 112),
       y: tag.y - 18,
-      width: 224,
+      width: isMobileGraph ? 280 : 224,
       height: 36,
       rx: 2,
       class: 't-hackcss-tag-graph-tag',
       'data-tag': tag.id
     }));
-    link.appendChild(label(tag.name, tag.x - 92, tag.y + 5, 't-hackcss-tag-graph-label', 'start'));
-    link.appendChild(label(String(tag.count), tag.x + 92, tag.y + 5, 't-hackcss-tag-graph-count', 'end'));
+    link.appendChild(label(tag.name, tag.x - (isMobileGraph ? 122 : 92), tag.y + 5, 't-hackcss-tag-graph-label', 'start'));
+    link.appendChild(label(String(tag.count), tag.x + (isMobileGraph ? 122 : 92), tag.y + 5, 't-hackcss-tag-graph-count', 'end'));
     svg.appendChild(link);
   });
 
-  postNodes.forEach(function (post) {
-    var link = create('a', { href: post.url });
-    link.setAttribute('class', 't-hackcss-tag-graph-link');
-    link.setAttribute('data-post', post.id);
-    link.appendChild(create('rect', {
-      x: post.x - 120,
-      y: post.y - 22,
-      width: 240,
-      height: 44,
-      rx: 2,
-      class: 't-hackcss-tag-graph-post',
-      'data-post': post.id
-    }));
-    link.appendChild(label(shortTitle(post.title), post.x, post.y + 5, 't-hackcss-tag-graph-post-label'));
-    svg.appendChild(link);
-  });
+  if (!isMobileGraph) {
+    postNodes.forEach(function (post) {
+      var link = create('a', { href: post.url });
+      link.setAttribute('class', 't-hackcss-tag-graph-link');
+      link.setAttribute('data-post', post.id);
+      link.appendChild(create('rect', {
+        x: post.x - 120,
+        y: post.y - 22,
+        width: 240,
+        height: 44,
+        rx: 2,
+        class: 't-hackcss-tag-graph-post',
+        'data-post': post.id
+      }));
+      link.appendChild(label(shortTitle(post.title), post.x, post.y + 5, 't-hackcss-tag-graph-post-label'));
+      svg.appendChild(link);
+    });
+  }
 
   function includes(list, value) {
     return list.indexOf(value) !== -1;

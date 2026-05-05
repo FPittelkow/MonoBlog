@@ -441,6 +441,10 @@ $on-palm: 768px;
       min-width: 36rem;
     }
 
+    &-tag-graph.is-mobile-tag-list &-tag-graph-svg {
+      min-width: 0;
+    }
+
     &-cards.grid {
       flex-direction: column;
       flex-wrap: wrap;
@@ -499,6 +503,10 @@ $on-palm: 768px;
 
     &-tag-graph-svg {
       min-width: 32rem;
+    }
+
+    &-tag-graph.is-mobile-tag-list &-tag-graph-svg {
+      min-width: 0;
     }
   }
 }
