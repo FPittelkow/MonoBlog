@@ -336,6 +336,15 @@
   }
 
   function selectTag(tagId) {
+    if (isMobileGraph) {
+      if (!includes(selectedTagIds, tagId)) {
+        selectedTagIds = selectedTagIds.concat(tagId);
+      }
+
+      applySelection();
+      return;
+    }
+
     if (includes(selectedTagIds, tagId)) {
       selectedTagIds = selectedTagIds.filter(function (selectedTagId) {
         return selectedTagId !== tagId;
