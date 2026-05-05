@@ -24,6 +24,9 @@ sass:
 # Theme settings
 theme_mode: standard  # choices are: 'dark', 'standard', 'markdown'
 
+plugins:
+  - jekyll-seo-tag
+
 
 # Customizations
 your_name: monointerferenz

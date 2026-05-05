@@ -4,4 +4,4 @@ source "https://rubygems.org"
 ruby "4.0.3"
 
 gem "jekyll"
-# gem "jekyll-seo-tag"
+gem "jekyll-seo-tag"
