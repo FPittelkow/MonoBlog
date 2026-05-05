@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Sound Thread
-date: 2026-05-04
+date: 2026-05-04 Europe/Brussel
 categories: tools
 tags:
   - audio
