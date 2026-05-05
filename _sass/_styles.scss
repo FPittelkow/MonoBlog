@@ -1,5 +1,15 @@
 // This file contains custom (non hack.css) styles
-@use "settings" as *;
+
+$spacing-unit: 10px !default;
+$image-size: 50px !default;
+$icon-size: 15px !default;
+$on-palm: 768px !default;
+
+@mixin media-query($device) {
+  @media screen and (max-width: $device) {
+    @content;
+  }
+}
 
 .t-hackcss {  // Main prefix to avoid collisions
  
