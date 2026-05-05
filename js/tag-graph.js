@@ -14,7 +14,7 @@
   var topPadding = 54;
   var bottomPadding = 54;
   var ns = 'http://www.w3.org/2000/svg';
-  var selectedTagId = null;
+  var selectedTagIds = [];
 
   var tagNodes = data.tags.slice().sort(function (left, right) {
     return right.count - left.count || left.name.localeCompare(right.name);
@@ -35,6 +35,7 @@
       id: 'post-' + index,
       title: post.title,
       url: post.url,
+      categories: post.categories || [],
       tags: post.tags,
       x: 660,
       y: topPadding + index * postGap
@@ -185,12 +186,61 @@
     svg.appendChild(link);
   });
 
-  function setActive(tagId, postId) {
+  function includes(list, value) {
+    return list.indexOf(value) !== -1;
+  }
+
+  function selectedTags() {
+    return selectedTagIds.map(function (tagId) {
+      return tagIdLookup[tagId];
+    }).filter(Boolean);
+  }
+
+  function selectedTagNames() {
+    return selectedTags().map(function (tag) {
+      return tag.name;
+    });
+  }
+
+  function postMatchesTags(post, tagNames) {
+    return tagNames.every(function (tagName) {
+      return includes(post.tags, tagName);
+    });
+  }
+
+  function postsForTags(tagNames) {
+    if (!tagNames.length) {
+      return postNodes;
+    }
+
+    return postNodes.filter(function (post) {
+      return postMatchesTags(post, tagNames);
+    });
+  }
+
+  function setActive(tagIds, postId) {
+    tagIds = tagIds || [];
+
     var activeTags = {};
     var activePosts = {};
+    var activePostIds = {};
+    var filterTagNames = tagIds.map(function (tagId) {
+      return tagIdLookup[tagId] && tagIdLookup[tagId].name;
+    }).filter(Boolean);
+    var matchingPosts = postsForTags(filterTagNames);
+
+    matchingPosts.forEach(function (post) {
+      activePostIds[post.id] = true;
+    });
+    tagIds.forEach(function (tagId) {
+      activeTags[tagId] = true;
+    });
 
     edges.forEach(function (edge) {
-      var active = (!tagId || edge.tag.id === tagId) && (!postId || edge.post.id === postId);
+      var active = (!tagIds.length || includes(tagIds, edge.tag.id)) &&
+        (!tagIds.length || activePostIds[edge.post.id]) &&
+        (!postId || edge.post.id === postId);
+
       edge.path.classList.toggle('is-active', active);
       edge.path.classList.toggle('is-muted', !active);
 
@@ -203,8 +253,20 @@
     tagConnections.forEach(function (connection) {
       var active = false;
 
-      if (tagId) {
-        active = connection.left.id === tagId || connection.right.id === tagId;
+      if (tagIds.length) {
+        active = (includes(tagIds, connection.left.id) || includes(tagIds, connection.right.id)) &&
+          (!postId || connection.sharedPosts.some(function (post) {
+            return post.id === postId;
+          }));
+
+        if (tagIds.length > 1) {
+          active = active && tagIds.every(function (tagId) {
+            return connection.left.id === tagId || connection.right.id === tagId ||
+              connection.sharedPosts.some(function (post) {
+                return tagIdLookup[tagId] && includes(post.tags, tagIdLookup[tagId].name);
+              });
+          });
+        }
       } else if (postId) {
         active = connection.sharedPosts.some(function (post) {
           return post.id === postId;
@@ -241,36 +303,51 @@
   }
 
   function applySelection() {
-    if (selectedTagId) {
-      setActive(selectedTagId);
+    if (selectedTagIds.length) {
+      setActive(selectedTagIds);
     } else {
       clearActive();
     }
 
     svg.querySelectorAll('.t-hackcss-tag-graph-link[data-tag]').forEach(function (node) {
-      node.setAttribute('aria-pressed', String(node.getAttribute('data-tag') === selectedTagId));
+      node.setAttribute('aria-pressed', String(includes(selectedTagIds, node.getAttribute('data-tag'))));
     });
 
     svg.querySelectorAll('.t-hackcss-tag-graph-tag').forEach(function (node) {
-      node.classList.toggle('is-selected', node.getAttribute('data-tag') === selectedTagId);
+      node.classList.toggle('is-selected', includes(selectedTagIds, node.getAttribute('data-tag')));
     });
 
     renderInsight();
   }
 
   function selectTag(tagId) {
-    selectedTagId = selectedTagId === tagId ? null : tagId;
+    if (includes(selectedTagIds, tagId)) {
+      selectedTagIds = selectedTagIds.filter(function (selectedTagId) {
+        return selectedTagId !== tagId;
+      });
+    } else {
+      selectedTagIds = selectedTagIds.concat(tagId);
+    }
+
     applySelection();
   }
 
   function selectTagFromHash() {
     var hash = window.location.hash.replace(/^#/, '');
-    var matchingTag = tagNodes.filter(function (tag) {
-      return tag.id === hash;
-    })[0];
+    var hashTags = hash.split(',').filter(Boolean);
 
-    selectedTagId = matchingTag ? matchingTag.id : null;
+    selectedTagIds = hashTags.filter(function (tagId) {
+      return Boolean(tagIdLookup[tagId]);
+    });
     applySelection();
+  }
+
+  function updateHash() {
+    if (selectedTagIds.length) {
+      window.location.hash = selectedTagIds.join(',');
+    } else if (window.location.hash) {
+      history.pushState('', document.title, window.location.pathname + window.location.search);
+    }
   }
 
   function createElement(name, className, text) {
@@ -287,22 +364,60 @@
     return node;
   }
 
-  function postsForTag(tagName) {
-    return postNodes.filter(function (post) {
-      return post.tags.indexOf(tagName) !== -1;
+  function countCategories(posts) {
+    var categories = {};
+
+    posts.forEach(function (post) {
+      post.categories.forEach(function (category) {
+        categories[category] = (categories[category] || 0) + 1;
+      });
+    });
+
+    return Object.keys(categories).sort(function (left, right) {
+      return categories[right] - categories[left] || left.localeCompare(right);
+    }).map(function (category) {
+      return {
+        name: category,
+        count: categories[category]
+      };
     });
   }
 
-  function relatedTagsForTag(tagId) {
-    return tagConnections.filter(function (connection) {
-      return connection.left.id === tagId || connection.right.id === tagId;
-    }).map(function (connection) {
-      var related = connection.left.id === tagId ? connection.right : connection.left;
+  function relatedTagsForSelection(posts, selectedNames) {
+    var related = {};
 
+    posts.forEach(function (post) {
+      post.tags.forEach(function (tagName) {
+        if (includes(selectedNames, tagName)) {
+          return;
+        }
+
+        related[tagName] = (related[tagName] || 0) + 1;
+      });
+    });
+
+    if (!Object.keys(related).length && selectedTagIds.length) {
+      tagConnections.forEach(function (connection) {
+        [connection.left, connection.right].forEach(function (tag) {
+          if (!includes(selectedTagIds, tag.id)) {
+            return;
+          }
+
+          var other = connection.left.id === tag.id ? connection.right : connection.left;
+          if (!includes(selectedNames, other.name)) {
+            related[other.name] = Math.max(related[other.name] || 0, connection.sharedPosts.length);
+          }
+        });
+      });
+    }
+
+    return Object.keys(related).map(function (tagName) {
       return {
-        tag: related,
-        count: connection.sharedPosts.length
+        tag: tagLookup[tagName],
+        count: related[tagName]
       };
+    }).filter(function (relatedTag) {
+      return relatedTag.tag;
     }).sort(function (left, right) {
       return right.count - left.count || left.tag.name.localeCompare(right.tag.name);
     });
@@ -322,21 +437,44 @@
     return list;
   }
 
-  function renderRelatedTags(relatedTags) {
+  function renderRelatedTags(relatedTags, baseTagIds) {
     var list = createElement('ul', 't-hackcss-tag-insight-tags');
+    baseTagIds = baseTagIds || [];
 
     relatedTags.forEach(function (related) {
       var item = createElement('li');
       var link = createElement('a', null, related.tag.name);
       var count = createElement('span', null, String(related.count));
 
-      link.href = '#tag-' + slug(related.tag.name);
+      link.href = '#' + baseTagIds.concat(related.tag.id).join(',');
       item.appendChild(link);
       item.appendChild(count);
       list.appendChild(item);
     });
 
     return list;
+  }
+
+  function renderCategories(categories) {
+    var list = createElement('ul', 't-hackcss-tag-insight-tags t-hackcss-tag-insight-categories');
+
+    categories.forEach(function (category) {
+      var item = createElement('li');
+      var count = createElement('span', null, String(category.count));
+
+      item.appendChild(document.createTextNode(category.name));
+      item.appendChild(count);
+      list.appendChild(item);
+    });
+
+    return list;
+  }
+
+  function renderSection(title, content) {
+    var section = createElement('section', 't-hackcss-tag-insight-section');
+    section.appendChild(createElement('h3', null, title));
+    section.appendChild(content);
+    return section;
   }
 
   function renderInsight() {
@@ -346,9 +484,8 @@
 
     insight.innerHTML = '';
 
-    if (!selectedTagId) {
+    if (!selectedTagIds.length) {
       var totalPosts = postNodes.length;
-      var heading = createElement('h2', null, 'Tag insights');
       var summary = createElement(
         'p',
         't-hackcss-tag-insight-summary',
@@ -361,42 +498,48 @@
         };
       });
 
-      // insight.appendChild(heading);
       insight.appendChild(summary);
-      insight.appendChild(renderRelatedTags(topTags));
+      insight.appendChild(renderSection('Frequent tags', renderRelatedTags(topTags)));
+      insight.appendChild(renderSection('Categories', renderCategories(countCategories(postNodes))));
       return;
     }
 
-    var tag = tagIdLookup[selectedTagId];
-    var posts = tag ? postsForTag(tag.name) : [];
-    var relatedTags = relatedTagsForTag(selectedTagId);
-    var tagHeading = createElement('h2', null, tag ? tag.name : 'Tag insights');
-    var tagSummary = createElement(
+    var selectedNames = selectedTagNames();
+    var posts = postsForTags(selectedNames);
+    var relatedTags = relatedTagsForSelection(posts, selectedNames);
+    var selectedHeading = createElement('h2', null, selectedNames.join(' + '));
+    var selectedSummary = createElement(
       'p',
       't-hackcss-tag-insight-summary',
-      posts.length + ' associated ' + (posts.length === 1 ? 'post' : 'posts') +
-      (relatedTags.length ? ' and ' + relatedTags.length + ' connected ' + (relatedTags.length === 1 ? 'tag' : 'tags') + '.' : '.')
+      selectedNames.length + ' selected ' + (selectedNames.length === 1 ? 'tag' : 'tags') +
+      ' match ' + posts.length + ' ' + (posts.length === 1 ? 'post' : 'posts') + '.'
     );
 
-    insight.appendChild(tagHeading);
-    // insight.appendChild(tagSummary);
+    insight.appendChild(selectedHeading);
+    insight.appendChild(selectedSummary);
+
+    // if (posts.length) {
+    //   insight.appendChild(renderSection('Categories', renderCategories(countCategories(posts))));
+    // }
 
     if (relatedTags.length) {
-      insight.appendChild(renderRelatedTags(relatedTags));
+      insight.appendChild(renderSection('Related tags', renderRelatedTags(relatedTags, selectedTagIds)));
     }
 
     if (posts.length) {
-      insight.appendChild(renderPostList(posts));
+      insight.appendChild(renderSection('Posts', renderPostList(posts)));
     }
   }
 
   svg.querySelectorAll('.t-hackcss-tag-graph-link').forEach(function (node) {
     node.addEventListener('mouseenter', function () {
-      setActive(node.getAttribute('data-tag'), node.getAttribute('data-post'));
+      var tagId = node.getAttribute('data-tag');
+      setActive(tagId ? [tagId] : [], node.getAttribute('data-post'));
     });
     node.addEventListener('mouseleave', applySelection);
     node.addEventListener('focus', function () {
-      setActive(node.getAttribute('data-tag'), node.getAttribute('data-post'));
+      var tagId = node.getAttribute('data-tag');
+      setActive(tagId ? [tagId] : [], node.getAttribute('data-post'));
     });
     node.addEventListener('blur', applySelection);
     node.addEventListener('click', function (event) {
@@ -408,12 +551,7 @@
 
       event.preventDefault();
       selectTag(tagId);
-
-      if (selectedTagId) {
-        window.location.hash = tagId;
-      } else if (window.location.hash) {
-        history.pushState('', document.title, window.location.pathname + window.location.search);
-      }
+      updateHash();
     });
   });
 
