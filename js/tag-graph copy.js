@@ -17,7 +17,6 @@
   var ns = 'http://www.w3.org/2000/svg';
   var selectedTagIds = [];
   var mobileTagList = null;
-  var resetButton = null;
 
   var tagNodes = data.tags.slice().sort(function (left, right) {
     return right.count - left.count || left.name.localeCompare(right.name);
@@ -55,7 +54,6 @@
   svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
   svg.innerHTML = '<title id="tag-graph-title">Post tag graph</title>';
   graph.classList.toggle('is-mobile-tag-list', isMobileGraph);
-  renderResetButton();
 
   function create(name, attrs) {
     var node = document.createElementNS(ns, name);
@@ -334,10 +332,6 @@
       node.setAttribute('aria-pressed', String(selected));
     });
 
-    if (resetButton) {
-      resetButton.disabled = !selectedTagIds.length;
-    }
-
     renderInsight();
   }
 
@@ -384,24 +378,6 @@
     }
 
     return node;
-  }
-
-  function resetSelection() {
-    selectedTagIds = [];
-    applySelection();
-    updateHash();
-  }
-
-  function renderResetButton() {
-    var actions = createElement('div', 't-hackcss-tag-actions');
-
-    resetButton = createElement('button', 't-hackcss-tag-reset', 'Reset');
-    resetButton.type = 'button';
-    resetButton.disabled = true;
-    resetButton.addEventListener('click', resetSelection);
-
-    actions.appendChild(resetButton);
-    graph.insertBefore(actions, svg);
   }
 
   function renderMobileTagList() {
