@@ -10,7 +10,7 @@
         <div class="t-hackcss-navigation-separator" aria-hidden="true"></div>
       {% else %}
         <a class="menu-item {% if link.secondary %}t-hackcss-navigation-secondary{% endif %} {% if url == link.url %}active{% endif %}"
-          role="menuitem" href="{{ link.url | prepend: site.baseurl }}" title="{{ link.title }}">
+          role="menuitem" href="{{ link.url | prepend: site.baseurl }}" title="{{ link.title }}"{% if link.target %} target="{{ link.target }}"{% endif %}{% if link.target == '_blank' %} rel="noopener noreferrer"{% endif %}>
           {{ link.text }} <div class="pull-right">»</div>
         </a>
   {% endif %}

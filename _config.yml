@@ -56,6 +56,12 @@ navigation:
 
   - spacer: true
 
+  - text: Portfolio
+    url: https://monointerferenz.de
+    target: _blank
+
+  - spacer: true
+
   - text: Feed
     url: /feed.xml
     secondary: true
