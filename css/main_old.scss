@@ -480,7 +480,7 @@ $on-palm: 768px;
 
     &-tag-filter:hover,
     &-tag-filter:focus {
-      background: #252a2e;
+      background: currentColor;
       color: #fff;
       outline: none;
     }
@@ -488,7 +488,6 @@ $on-palm: 768px;
     @at-root {
       body.hack.dark .t-hackcss-tag-filter:hover,
       body.hack.dark .t-hackcss-tag-filter:focus {
-        background: #ccc;
         color: #000;
       }
     }
