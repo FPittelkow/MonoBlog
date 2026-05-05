@@ -478,18 +478,27 @@ $on-palm: 768px;
       font-weight: 700;
     }
 
-    &-tag-filter:hover,
     &-tag-filter:focus {
-      background: #252a2e;
-      color: #fff;
       outline: none;
     }
 
+    &-tag-filter:focus-visible {
+      box-shadow: inset 0 0 0 1px currentColor;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &-tag-filter:hover {
+        background: #252a2e;
+        color: #fff;
+      }
+    }
+
     @at-root {
-      body.hack.dark .t-hackcss-tag-filter:hover,
-      body.hack.dark .t-hackcss-tag-filter:focus {
-        background: #ccc;
-        color: #000;
+      @media (hover: hover) and (pointer: fine) {
+        body.hack.dark .t-hackcss-tag-filter:hover {
+          background: #ccc;
+          color: #000;
+        }
       }
     }
 
