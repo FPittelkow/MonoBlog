@@ -336,12 +336,6 @@
   }
 
   function selectTag(tagId) {
-    if (isMobileGraph) {
-      selectedTagIds = includes(selectedTagIds, tagId) ? [] : [tagId];
-      applySelection();
-      return;
-    }
-
     if (includes(selectedTagIds, tagId)) {
       selectedTagIds = selectedTagIds.filter(function (selectedTagId) {
         return selectedTagId !== tagId;
@@ -360,11 +354,6 @@
     selectedTagIds = hashTags.filter(function (tagId) {
       return Boolean(tagIdLookup[tagId]);
     });
-
-    if (isMobileGraph && selectedTagIds.length > 1) {
-      selectedTagIds = selectedTagIds.slice(-1);
-      history.replaceState('', document.title, window.location.pathname + window.location.search + '#' + selectedTagIds[0]);
-    }
 
     applySelection();
   }
@@ -496,7 +485,7 @@
       var link = createElement('a', null, related.tag.name);
       var count = createElement('span', null, String(related.count));
 
-      link.href = '#' + (isMobileGraph ? related.tag.id : baseTagIds.concat(related.tag.id).join(','));
+      link.href = '#' + baseTagIds.concat(related.tag.id).join(',');
       item.appendChild(link);
       item.appendChild(count);
       list.appendChild(item);
