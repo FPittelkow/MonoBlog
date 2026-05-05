@@ -23,21 +23,14 @@
   <link rel="canonical"
         href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}" />
 
-  <!-- hack.css -->
-  <link rel="stylesheet" href="https://npmcdn.com/hack/dist/hack.css" />
-  {% if site.theme_mode == 'standard' %}
-  <link rel="stylesheet" href="https://npmcdn.com/hack/dist/standard.css" />
-  {% elsif site.theme_mode == 'dark' %}
-  <link rel="stylesheet" href="https://npmcdn.com/hack/dist/dark.css" />
-  {% endif %}
-
   <!-- Prism.js -->
   <link rel="stylesheet" href="https://npmcdn.com/prismjs@1.5.1/themes/prism.css" />
 
   <!-- Custom style -->
-  <link rel="stylesheet" href="{{ "/css/hack.css" | prepend: site.baseurl }}"/>
-  <link rel="stylesheet" href="{{ "/css/style_standard.css" | prepend: site.baseurl }}"/>
-  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}" />
+  {% assign asset_version = site.time | date: "%s" %}
+  <link rel="stylesheet" href="{{ "/css/hack.css" | relative_url }}?v={{ asset_version }}"/>
+  <link rel="stylesheet" href="{{ "/css/style_standard.css" | relative_url }}?v={{ asset_version }}"/>
+  <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}?v={{ asset_version }}" />
 
   <!-- Feed -->
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}"
