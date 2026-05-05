@@ -14,7 +14,12 @@
 </script>
 
   <!-- Favicon -->
-  <link rel="icon" href="{{ "/favicon.png" | prepend: site.baseurl }}">
+  <link rel="icon" href="{{ "/favicon.ico" | prepend: site.baseurl }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/apple-touch-icon.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ "/favicon-32x32.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "/favicon-16x16.png" | prepend: site.baseurl }}">
+  <link rel="manifest" href="{{ "/favicon-16x16.png" | prepend: site.baseurl }}">
+  <link rel="manifest" href="{{ "/site.webmanifest" | prepend: site.baseurl }}" >
 
   <!-- Meta information -->
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
