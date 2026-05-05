@@ -6,15 +6,15 @@
     {% assign url = page.url|remove:'index.html' %}
     {% assign secondary_started = false %}
     {% for link in site.navigation %}
-      {% if link.secondary and secondary_started == false %}
-        {% assign secondary_started = true %}
+      {% if link.spacer %}
         <div class="t-hackcss-navigation-separator" aria-hidden="true"></div>
-      {% endif %}
-      <a class="menu-item {% if link.secondary %}t-hackcss-navigation-secondary{% endif %} {% if url == link.url %}active{% endif %}"
-        role="menuitem" href="{{ link.url | prepend: site.baseurl }}" title="{{ link.title }}">
-        {{ link.text }} <div class="pull-right">»</div>
-      </a>
-    {% endfor %}
+      {% else %}
+        <a class="menu-item {% if link.secondary %}t-hackcss-navigation-secondary{% endif %} {% if url == link.url %}active{% endif %}"
+          role="menuitem" href="{{ link.url | prepend: site.baseurl }}" title="{{ link.title }}">
+          {{ link.text }} <div class="pull-right">»</div>
+        </a>
+  {% endif %}
+{% endfor %}
   </nav>
 
 </div>

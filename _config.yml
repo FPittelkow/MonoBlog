@@ -33,6 +33,7 @@ navigation:
   - text: Home
     url: /
 
+  - spacer: true
 
   - text: Text
     url: /text
@@ -40,6 +41,9 @@ navigation:
     url: /tools
   - text: Artifacts
     url: /artifacts
+
+  - spacer: true
+  
   - text: Tags
     url: /tags
     secondary: true
