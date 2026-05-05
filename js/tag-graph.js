@@ -16,6 +16,7 @@
   var bottomPadding = isMobileGraph ? 28 : 54;
   var ns = 'http://www.w3.org/2000/svg';
   var selectedTagIds = [];
+  var mobileTagList = null;
 
   var tagNodes = data.tags.slice().sort(function (left, right) {
     return right.count - left.count || left.name.localeCompare(right.name);
@@ -146,7 +147,9 @@
     });
   });
 
-  if (!isMobileGraph) {
+  if (isMobileGraph) {
+    renderMobileTagList();
+  } else {
     tagConnections.forEach(function (connection) {
       svg.appendChild(connection.path);
     });
@@ -154,28 +157,26 @@
     edges.forEach(function (edge) {
       svg.appendChild(edge.path);
     });
-  }
 
-  tagNodes.forEach(function (tag) {
-    var link = create('a', { href: '#tag-' + slug(tag.name) });
-    link.setAttribute('class', 't-hackcss-tag-graph-link');
-    link.setAttribute('data-tag', tag.id);
-    link.setAttribute('aria-pressed', 'false');
-    link.appendChild(create('rect', {
-      x: tag.x - (isMobileGraph ? 140 : 112),
-      y: tag.y - 18,
-      width: isMobileGraph ? 280 : 224,
-      height: 36,
-      rx: 2,
-      class: 't-hackcss-tag-graph-tag',
-      'data-tag': tag.id
-    }));
-    link.appendChild(label(tag.name, tag.x - (isMobileGraph ? 122 : 92), tag.y + 5, 't-hackcss-tag-graph-label', 'start'));
-    link.appendChild(label(String(tag.count), tag.x + (isMobileGraph ? 122 : 92), tag.y + 5, 't-hackcss-tag-graph-count', 'end'));
-    svg.appendChild(link);
-  });
+    tagNodes.forEach(function (tag) {
+      var link = create('a', { href: '#tag-' + slug(tag.name) });
+      link.setAttribute('class', 't-hackcss-tag-graph-link');
+      link.setAttribute('data-tag', tag.id);
+      link.setAttribute('aria-pressed', 'false');
+      link.appendChild(create('rect', {
+        x: tag.x - 112,
+        y: tag.y - 18,
+        width: 224,
+        height: 36,
+        rx: 2,
+        class: 't-hackcss-tag-graph-tag',
+        'data-tag': tag.id
+      }));
+      link.appendChild(label(tag.name, tag.x - 92, tag.y + 5, 't-hackcss-tag-graph-label', 'start'));
+      link.appendChild(label(String(tag.count), tag.x + 92, tag.y + 5, 't-hackcss-tag-graph-count', 'end'));
+      svg.appendChild(link);
+    });
 
-  if (!isMobileGraph) {
     postNodes.forEach(function (post) {
       var link = create('a', { href: post.url });
       link.setAttribute('class', 't-hackcss-tag-graph-link');
@@ -325,10 +326,22 @@
       node.classList.toggle('is-selected', includes(selectedTagIds, node.getAttribute('data-tag')));
     });
 
+    graph.querySelectorAll('.t-hackcss-tag-filter').forEach(function (node) {
+      var selected = includes(selectedTagIds, node.getAttribute('data-tag'));
+      node.classList.toggle('is-selected', selected);
+      node.setAttribute('aria-pressed', String(selected));
+    });
+
     renderInsight();
   }
 
   function selectTag(tagId) {
+    if (isMobileGraph) {
+      selectedTagIds = includes(selectedTagIds, tagId) ? [] : [tagId];
+      applySelection();
+      return;
+    }
+
     if (includes(selectedTagIds, tagId)) {
       selectedTagIds = selectedTagIds.filter(function (selectedTagId) {
         return selectedTagId !== tagId;
@@ -370,6 +383,29 @@
     }
 
     return node;
+  }
+
+  function renderMobileTagList() {
+    mobileTagList = createElement('div', 't-hackcss-tag-filter-list');
+
+    tagNodes.forEach(function (tag) {
+      var button = createElement('button', 't-hackcss-tag-filter');
+      var count = createElement('span', null, String(tag.count));
+
+      button.type = 'button';
+      button.setAttribute('data-tag', tag.id);
+      button.setAttribute('aria-pressed', 'false');
+      button.appendChild(document.createTextNode(tag.name));
+      button.appendChild(count);
+      button.addEventListener('click', function () {
+        selectTag(tag.id);
+        updateHash();
+      });
+
+      mobileTagList.appendChild(button);
+    });
+
+    graph.appendChild(mobileTagList);
   }
 
   function countCategories(posts) {

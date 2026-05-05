@@ -442,7 +442,54 @@ $on-palm: 768px;
     }
 
     &-tag-graph.is-mobile-tag-list &-tag-graph-svg {
+      display: none;
       min-width: 0;
+    }
+
+    &-tag-filter-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.75rem 0;
+    }
+
+    &-tag-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      min-height: 2.35rem;
+      padding: 0.25rem 0.55rem;
+      border: 1px solid currentColor;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      line-height: 1.25;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    &-tag-filter span {
+      opacity: 0.68;
+    }
+
+    &-tag-filter.is-selected {
+      box-shadow: inset 0 0 0 1px currentColor;
+      font-weight: 700;
+    }
+
+    &-tag-filter:hover,
+    &-tag-filter:focus {
+      background: currentColor;
+      color: #fff;
+      outline: none;
+    }
+
+    @at-root {
+      body.hack.dark .t-hackcss-tag-filter:hover,
+      body.hack.dark .t-hackcss-tag-filter:focus {
+        color: #000;
+      }
     }
 
     &-cards.grid {
@@ -506,6 +553,7 @@ $on-palm: 768px;
     }
 
     &-tag-graph.is-mobile-tag-list &-tag-graph-svg {
+      display: none;
       min-width: 0;
     }
   }
