@@ -53,5 +53,5 @@ navigation:
 
   - spacer: true
 
-  -text: Feed
+  - text: Feed
     url: /feed.xml
