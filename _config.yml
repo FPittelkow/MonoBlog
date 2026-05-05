@@ -64,4 +64,5 @@ navigation:
 
   - text: Feed
     url: /feed.xml
+    target: _blank
     secondary: true

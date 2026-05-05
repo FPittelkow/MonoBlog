@@ -7,7 +7,8 @@
     {% assign secondary_started = false %}
     {% for link in site.navigation %}
       {% if link.spacer %}
-        <div class="t-hackcss-navigation-separator" aria-hidden="true"></div>
+        <!-- <div class="t-hackcss-navigation-separator" aria-hidden="true"></div> -->
+        <div style="text-align: center;">&#x23BD;</div>
       {% else %}
         <a class="menu-item {% if link.secondary %}t-hackcss-navigation-secondary{% endif %} {% if url == link.url %}active{% endif %}"
           role="menuitem" href="{{ link.url | prepend: site.baseurl }}" title="{{ link.title }}"{% if link.target %} target="{{ link.target }}"{% endif %}{% if link.target == '_blank' %} rel="noopener noreferrer"{% endif %}>

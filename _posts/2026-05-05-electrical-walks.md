@@ -7,7 +7,7 @@ tags:
   - installation
   - sound
   - atmosphere
-short_description: Electrical Walks is an an invitation to a special kind of investigation.
+short_description: Electrical Walks is an an invitation to a special kind of investigation by Christina Kubisch.
 ---
 Electrical Walks is an an invitation to a special kind of investigation.
 

@@ -6,7 +6,7 @@ categories: tools
 tags:
   - audio
   - software
-short_description: Node based interface for The Composers Desktop Project
+short_description: Node based interface for The Composers Desktop Project.
 ---
 Node based interface for The Composers Desktop Project.
 

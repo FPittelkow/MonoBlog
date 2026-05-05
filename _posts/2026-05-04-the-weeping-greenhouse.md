@@ -7,7 +7,7 @@ tags:
   - installation
   - environment
   - atmosphere
-short_description: Imersive installation about climate change and atmosphere
+short_description: Imersive installation about climate change and atmosphere by Ronald van der Meijs.
 ---
 Imersive installation about climate change and atmosphere.
 
