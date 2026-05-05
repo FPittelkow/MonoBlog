@@ -1,4 +1,5 @@
 // This file contains custom (non hack.css) styles
+@use "settings" as *;
 
 .t-hackcss {  // Main prefix to avoid collisions
  
@@ -253,6 +254,12 @@
     fill-opacity: 0.06;
   }
 
+  &-tag-graph-link:hover &-tag-graph-tag.is-selected,
+  &-tag-graph-link:focus &-tag-graph-tag.is-selected {
+    fill: currentColor;
+    fill-opacity: 0.06;
+  }
+
   &-tag-insight {
     margin-bottom: 2rem;
     padding: 1rem;
@@ -268,6 +275,15 @@
   &-tag-insight-summary {
     margin-top: 0;
     margin-bottom: 0.75rem;
+  }
+
+  &-tag-insight-section {
+    margin-top: 0.85rem;
+  }
+
+  &-tag-insight-section h3 {
+    margin: 0 0 0.45rem;
+    font-size: 1rem;
   }
 
   &-tag-insight-tags {
@@ -291,6 +307,10 @@
 
   &-tag-insight-tags span {
     opacity: 0.68;
+  }
+
+  &-tag-insight-categories li {
+    border-style: dashed;
   }
 
   &-tag-insight-posts {
