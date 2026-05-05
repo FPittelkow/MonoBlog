@@ -50,3 +50,8 @@ navigation:
   - text: Search
     url: /search
     secondary: true
+
+  - spacer: true
+
+  -text: Feed
+    url: /feed.xml
