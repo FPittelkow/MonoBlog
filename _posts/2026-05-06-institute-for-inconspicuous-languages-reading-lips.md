@@ -7,8 +7,6 @@ tags: [art, speculative-design, language, research, installation, media-art]
 image: "https://images.squarespace-cdn.com/content/v1/5aeca48a506fbe863b23a8b6/1600017122954-D2JL8SG1Z115XYZ24BHU/2014_0102_172917_002.jpg"
 ---
 
-{{TOC}}
-
 # Institute for Inconspicuous Languages: Reading Lips
 
 ![Institute for Inconspicuous Languages](https://images.squarespace-cdn.com/content/v1/5aeca48a506fbe863b23a8b6/1600017122954-D2JL8SG1Z115XYZ24BHU/2014_0102_172917_002.jpg)
@@ -27,7 +25,7 @@ The project reflects recurring themes in Petrič’s work:
 
 Rather than presenting definitive answers, the work functions as an open investigation into how communication systems are constructed, recognized, and legitimized.
 
-# Original project:
-- https://www.spelapetric.org/#/institute-for-inconspicuous-languages/
+**[Original project](https://www.spelapetric.org/#/institute-for-inconspicuous-languages/)**
+)
 
 All images and works belong to their respective creators and rights holders.
