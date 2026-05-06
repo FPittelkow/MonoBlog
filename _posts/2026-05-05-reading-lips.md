@@ -11,6 +11,8 @@ short_description: Life in the terratope.
 ---
 ![2014_0102_172917_002.jpg](https://images.squarespace-cdn.com/content/v1/5aeca48a506fbe863b23a8b6/1600017122954-D2JL8SG1Z115XYZ24BHU/2014_0102_172917_002.jpg?format=2500w)
 
+[Link to Website](https://www.spelapetric.org/#/institute-for-inconspicuous-languages/)
+
 The journal Science recently published an article in which scientists describe the first meaningful exchange between a ficus tree and a human, which could, in a broader sense, be described as a conversation. The lucidly conceived experiment demanded exceptional patience and total dedication from both sides – during an 18-year experiment (2021-39) the ficus tree and the human had to negotiate a common semiotic code.
 
 Similar to other plants, ficus trees (*Ficus benjamina*) monitor the amount of water they take up through their roots by opening and closing the stomata that are found on their leaves. Each leaf has thousands of 'tiny mouths' (stomata). The linguist and polyglot Mi Yu asked herself whether she could read stomata in a similar way as the deaf can read lips and thus establish a basic sign set of communication signs with the young ficus.
