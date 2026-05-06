@@ -26,6 +26,5 @@ The project reflects recurring themes in Petrič’s work:
 Rather than presenting definitive answers, the work functions as an open investigation into how communication systems are constructed, recognized, and legitimized.
 
 **[Original project](https://www.spelapetric.org/#/institute-for-inconspicuous-languages/)**
-)
 
 All images and works belong to their respective creators and rights holders.
