@@ -78,6 +78,16 @@ $on-palm: 768px !default;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
+
+    @media screen and (min-width: #{$on-palm + 1px}) {
+      .container > .grid > aside.cell[role="navigation"] {
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        max-height: 100vh;
+        overflow-y: auto;
+      }
+    }
   }
 
   // navigation.html

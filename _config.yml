@@ -12,6 +12,8 @@ repository: FPittelkow/MonoBlog
 url: "https://blog.monointerferenz.de"
 baseurl: ""
 
+future: false
+
 timezone: Europe/Brussels
 
 # Build settings
