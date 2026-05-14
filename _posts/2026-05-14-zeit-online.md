@@ -2,12 +2,11 @@
 layout: post_no_date
 title: Zeit-Online
 ate: 2026-05-14 Europe/Brussel
-author: Friedrich Pittekow
 categories: text
 tags:
   - poem
   - experimental
-short_description: Poem based on Zeit-Online headlines.
+short_description: Russische und englische Fans protestieren gegen Wohnungseinbrüche. Videoüberwachung und Wachpolizisten sind der hart erkämpfte Sieg.
 ---
 Russische und englische Fans gegen  
 so viele Wohnungseinbrüche wie nie.  
