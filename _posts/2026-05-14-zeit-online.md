@@ -1,8 +1,8 @@
 ---
 layout: post_no_date
 ate: 2026-05-14 Europe/Brussel
-categories: text
 short_description: Russische und englische Fans protestieren gegen Wohnungseinbrüche. Videoüberwachung und Wachpolizisten sind der hart erkämpfte Sieg.
+categories: text
 title: Zeit-Online
 ---
 
@@ -44,4 +44,4 @@ Ein gutes Schuhregal.
 Afrikanische Mode. Sportbekleidung. Es läuft gut.  
 
 Was ist schwarze Politik.  
-Ein Professor. Eine Frage, die sich jeder Abiturient stellen sollte.  
+Ein Professor. Eine Frage, die sich jeder Abiturient stellen sollte. 
