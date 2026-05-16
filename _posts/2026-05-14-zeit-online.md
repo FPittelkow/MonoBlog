@@ -1,13 +1,11 @@
 ---
 layout: post_no_date
-title: Zeit-Online
 ate: 2026-05-14 Europe/Brussel
 categories: text
-tags:
-  - poem
-  - experimental
 short_description: Russische und englische Fans protestieren gegen Wohnungseinbrüche. Videoüberwachung und Wachpolizisten sind der hart erkämpfte Sieg.
+title: Zeit-Online
 ---
+
 Russische und englische Fans gegen  
 so viele Wohnungseinbrüche wie nie.  
 Videoüberwachung und Wachpolizisten,  
