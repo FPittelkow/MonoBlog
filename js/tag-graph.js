@@ -1,543 +1,579 @@
 (function () {
   var graph = document.querySelector('[data-tag-graph]');
   var svg = graph && graph.querySelector('svg');
+  var loading = document.querySelector('[data-tag-graph-loading]');
   var insight = document.querySelector('[data-tag-insight]');
   var data = window.tagGraphData;
 
-  if (!graph || !svg || !data || !data.tags.length) {
+  if (!graph || !svg || !data || !data.posts || !data.posts.length) {
     return;
   }
 
-  var isMobileGraph = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-  var width = isMobileGraph ? 320 : 860;
-  var tagGap = isMobileGraph ? 44 : 58;
-  var postGap = 78;
-  var topPadding = isMobileGraph ? 28 : 54;
-  var bottomPadding = isMobileGraph ? 28 : 54;
   var ns = 'http://www.w3.org/2000/svg';
-  var selectedTagIds = [];
-  var mobileTagList = null;
-  var resetButton = null;
-
-  var tagNodes = data.tags.slice().sort(function (left, right) {
-    return right.count - left.count || left.name.localeCompare(right.name);
-  }).map(function (tag, index) {
-    return {
-      id: 'tag-' + slug(tag.name),
-      name: tag.name,
-      count: tag.count,
-      x: isMobileGraph ? 160 : 190,
-      y: topPadding + index * tagGap
-    };
-  });
-
-  var postNodes = data.posts.filter(function (post) {
-    return post.tags && post.tags.length;
-  }).map(function (post, index) {
-    return {
-      id: 'post-' + index,
-      title: post.title,
-      url: post.url,
-      categories: post.categories || [],
-      tags: post.tags,
-      x: 660,
-      y: topPadding + index * postGap
-    };
-  });
-
-  var height = isMobileGraph ?
-    Math.max(220, topPadding + bottomPadding + Math.max(0, (tagNodes.length - 1) * tagGap)) :
-    Math.max(
-      300,
-      topPadding + bottomPadding + Math.max((tagNodes.length - 1) * tagGap, (postNodes.length - 1) * postGap)
-    );
+  var width = 1080;
+  var height = 660;
+  var centerX = width / 2;
+  var centerY = height / 2;
+  var selectedId = '';
+  var hoveredId = '';
+  var draggedNode = null;
+  var pointerStart = null;
+  var frame = 0;
+  var maxFrames = 380;
+  var spacingLevels = {
+    tight: 0.92,
+    normal: 1.12,
+    roomy: 1.42
+  };
+  var spacing = 'roomy';
+  var motionOK = !window.matchMedia ||
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var categoryUrls = {
+    artifact: '/artifacts',
+    text: '/text',
+    tools: '/tools'
+  };
 
   svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
-  svg.innerHTML = '<title id="tag-graph-title">Post tag graph</title>';
-  graph.classList.toggle('is-mobile-tag-list', isMobileGraph);
-  renderResetButton();
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-labelledby', 'tag-graph-title tag-graph-desc');
+  svg.innerHTML = '';
+  svg.appendChild(create('title', { id: 'tag-graph-title' }, 'Graph of blog tags and categories'));
+  svg.appendChild(create(
+    'desc',
+    { id: 'tag-graph-desc' },
+    'Posts connect categories and tags. Select a node to highlight related posts and metadata.'
+  ));
+  graph.classList.add('is-ready');
+  if (loading) {
+    loading.hidden = true;
+  }
 
-  function create(name, attrs) {
+  var model = buildModel(data.posts);
+  var edgeLayer = create('g', { class: 't-hackcss-tag-graph-edges' });
+  var nodeLayer = create('g', { class: 't-hackcss-tag-graph-nodes' });
+  svg.appendChild(edgeLayer);
+  svg.appendChild(nodeLayer);
+
+  model.edges.forEach(function (edge) {
+    edge.el = create('line', {
+      class: 't-hackcss-tag-graph-edge',
+      'data-from': edge.source.id,
+      'data-to': edge.target.id
+    });
+    edgeLayer.appendChild(edge.el);
+  });
+
+  model.nodes.forEach(function (node) {
+    var link = create('a', {
+      href: node.url || '#',
+      class: 't-hackcss-tag-graph-link',
+      'data-node': node.id,
+      'data-kind': node.kind,
+      'aria-label': node.kind + ': ' + node.name
+    });
+    var group = create('g', {
+      class: 't-hackcss-tag-graph-node',
+      'data-node': node.id,
+      'data-kind': node.kind
+    });
+
+    node.el = group;
+    node.hit = create('circle', {
+      r: Math.max(node.radius + 11, 18),
+      class: 't-hackcss-tag-graph-hit'
+    });
+    node.circle = create('circle', {
+      r: node.radius,
+      class: 't-hackcss-tag-graph-dot'
+    });
+    node.label = create('text', {
+      class: 't-hackcss-tag-graph-label',
+      x: node.radius + 7,
+      y: 4
+    }, graphLabel(node));
+
+    group.appendChild(create('title', {}, node.name));
+    group.appendChild(node.hit);
+    group.appendChild(node.circle);
+    group.appendChild(node.label);
+    link.appendChild(group);
+    nodeLayer.appendChild(link);
+
+    link.addEventListener('mouseenter', function () {
+      hoveredId = node.id;
+      applyFocus();
+    });
+    link.addEventListener('mouseleave', function () {
+      hoveredId = '';
+      applyFocus();
+    });
+    link.addEventListener('focus', function () {
+      hoveredId = node.id;
+      applyFocus();
+    });
+    link.addEventListener('blur', function () {
+      hoveredId = '';
+      applyFocus();
+    });
+    link.addEventListener('click', function (event) {
+      if (node.kind !== 'post') {
+        event.preventDefault();
+        selectedId = selectedId === node.id ? '' : node.id;
+        updateHash();
+        renderInsight();
+        applyFocus();
+      }
+    });
+    link.addEventListener('pointerdown', function (event) {
+      if (!motionOK) {
+        return;
+      }
+
+      draggedNode = node;
+      pointerStart = svgPoint(event);
+      node.fx = node.x;
+      node.fy = node.y;
+      link.setPointerCapture(event.pointerId);
+      link.classList.add('is-dragging');
+    });
+    link.addEventListener('pointermove', function (event) {
+      if (!draggedNode || draggedNode !== node) {
+        return;
+      }
+
+      var point = svgPoint(event);
+      node.fx = clamp(point.x, 22, width - 22);
+      node.fy = clamp(point.y, 22, height - 22);
+      node.x = node.fx;
+      node.y = node.fy;
+      frame = 0;
+      tick();
+    });
+    link.addEventListener('pointerup', function (event) {
+      if (draggedNode !== node) {
+        return;
+      }
+
+      link.releasePointerCapture(event.pointerId);
+      link.classList.remove('is-dragging');
+      draggedNode = null;
+      pointerStart = null;
+    });
+  });
+
+  renderLegend();
+  renderSpacingControls();
+  selectFromHash();
+  renderInsight();
+  applyFocus();
+
+  if (motionOK) {
+    requestAnimationFrame(run);
+  } else {
+    for (var i = 0; i < maxFrames; i += 1) {
+      simulate();
+    }
+    tick();
+  }
+
+  window.addEventListener('hashchange', selectFromHash);
+
+  function create(name, attrs, text) {
     var node = document.createElementNS(ns, name);
-    Object.keys(attrs).forEach(function (key) {
+    Object.keys(attrs || {}).forEach(function (key) {
       node.setAttribute(key, attrs[key]);
     });
+    if (text) {
+      node.textContent = text;
+    }
+    return node;
+  }
+
+  function createElement(name, className, text) {
+    var node = document.createElement(name);
+    if (className) {
+      node.className = className;
+    }
+    if (text) {
+      node.textContent = text;
+    }
     return node;
   }
 
   function slug(value) {
-    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
 
-  function label(text, x, y, className, anchor) {
-    var node = create('text', {
-      x: x,
-      y: y,
-      'text-anchor': anchor || 'middle',
-      class: className
-    });
-    node.textContent = text;
-    return node;
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
-  function shortTitle(title) {
-    return title.length > 34 ? title.slice(0, 31) + '...' : title;
+  function truncate(value, length) {
+    value = String(value || '');
+    return value.length > length ? value.slice(0, length - 3) + '...' : value;
   }
 
-  var edges = [];
-  var tagConnections = [];
-  var tagLookup = tagNodes.reduce(function (lookup, tag) {
-    lookup[tag.name] = tag;
-    return lookup;
-  }, {});
-  var tagIdLookup = tagNodes.reduce(function (lookup, tag) {
-    lookup[tag.id] = tag;
-    return lookup;
-  }, {});
-
-  tagNodes.forEach(function (left, leftIndex) {
-    tagNodes.slice(leftIndex + 1).forEach(function (right) {
-      var sharedPosts = postNodes.filter(function (post) {
-        return post.tags.indexOf(left.name) !== -1 && post.tags.indexOf(right.name) !== -1;
-      });
-
-      if (!sharedPosts.length) {
-        return;
-      }
-
-      tagConnections.push({
-        left: left,
-        right: right,
-        sharedPosts: sharedPosts,
-        path: create('path', {
-          d: [
-            'M', left.x - 122, left.y,
-            'C', left.x - 178, left.y,
-            right.x - 178, right.y,
-            right.x - 122, right.y
-          ].join(' '),
-          class: 't-hackcss-tag-graph-tag-edge',
-          'data-left-tag': left.id,
-          'data-right-tag': right.id
-        })
-      });
-    });
-  });
-
-  postNodes.forEach(function (post) {
-    post.tags.forEach(function (tagName) {
-      var tag = tagLookup[tagName];
-      if (!tag) {
-        return;
-      }
-
-      edges.push({
-        tag: tag,
-        post: post,
-        path: create('path', {
-          d: [
-            'M', tag.x + 112, tag.y,
-            'C', tag.x + 250, tag.y,
-            post.x - 250, post.y,
-            post.x - 120, post.y
-          ].join(' '),
-          class: 't-hackcss-tag-graph-edge',
-          'data-tag': tag.id,
-          'data-post': post.id
-        })
-      });
-    });
-  });
-
-  if (isMobileGraph) {
-    renderMobileTagList();
-  } else {
-    tagConnections.forEach(function (connection) {
-      svg.appendChild(connection.path);
-    });
-
-    edges.forEach(function (edge) {
-      svg.appendChild(edge.path);
-    });
-
-    tagNodes.forEach(function (tag) {
-      var link = create('a', { href: '#tag-' + slug(tag.name) });
-      link.setAttribute('class', 't-hackcss-tag-graph-link');
-      link.setAttribute('data-tag', tag.id);
-      link.setAttribute('aria-pressed', 'false');
-      link.appendChild(create('rect', {
-        x: tag.x - 112,
-        y: tag.y - 18,
-        width: 224,
-        height: 36,
-        rx: 2,
-        class: 't-hackcss-tag-graph-tag',
-        'data-tag': tag.id
-      }));
-      link.appendChild(label(tag.name, tag.x - 92, tag.y + 5, 't-hackcss-tag-graph-label', 'start'));
-      link.appendChild(label(String(tag.count), tag.x + 92, tag.y + 5, 't-hackcss-tag-graph-count', 'end'));
-      svg.appendChild(link);
-    });
-
-    postNodes.forEach(function (post) {
-      var link = create('a', { href: post.url });
-      link.setAttribute('class', 't-hackcss-tag-graph-link');
-      link.setAttribute('data-post', post.id);
-      link.appendChild(create('rect', {
-        x: post.x - 120,
-        y: post.y - 22,
-        width: 240,
-        height: 44,
-        rx: 2,
-        class: 't-hackcss-tag-graph-post',
-        'data-post': post.id
-      }));
-      link.appendChild(label(shortTitle(post.title), post.x, post.y + 5, 't-hackcss-tag-graph-post-label'));
-      svg.appendChild(link);
-    });
-  }
-
-  function includes(list, value) {
-    return list.indexOf(value) !== -1;
-  }
-
-  function selectedTags() {
-    return selectedTagIds.map(function (tagId) {
-      return tagIdLookup[tagId];
-    }).filter(Boolean);
-  }
-
-  function selectedTagNames() {
-    return selectedTags().map(function (tag) {
-      return tag.name;
-    });
-  }
-
-  function postMatchesTags(post, tagNames) {
-    return tagNames.every(function (tagName) {
-      return includes(post.tags, tagName);
-    });
-  }
-
-  function postsForTags(tagNames) {
-    if (!tagNames.length) {
-      return postNodes;
+  function graphLabel(node) {
+    if (node.kind === 'post') {
+      return truncate(node.name, 28);
     }
 
-    return postNodes.filter(function (post) {
-      return postMatchesTags(post, tagNames);
-    });
+    return truncate(node.name, 22);
   }
 
-  function setActive(tagIds, postId) {
-    tagIds = tagIds || [];
+  function svgPoint(event) {
+    var point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    return point.matrixTransform(svg.getScreenCTM().inverse());
+  }
 
-    var activeTags = {};
-    var activePosts = {};
-    var activePostIds = {};
-    var filterTagNames = tagIds.map(function (tagId) {
-      return tagIdLookup[tagId] && tagIdLookup[tagId].name;
-    }).filter(Boolean);
-    var matchingPosts = postsForTags(filterTagNames);
+  function buildModel(posts) {
+    var nodes = [];
+    var nodeById = {};
+    var edges = [];
 
-    matchingPosts.forEach(function (post) {
-      activePostIds[post.id] = true;
+    function upsertNode(id, kind, name, url) {
+      if (nodeById[id]) {
+        nodeById[id].count += 1;
+        return nodeById[id];
+      }
+
+      var angle = nodes.length * 2.399963;
+      var radius = kind === 'post' ? 155 : 220;
+      var node = {
+        id: id,
+        kind: kind,
+        name: name,
+        url: url || '',
+        count: 1,
+        links: [],
+        x: centerX + Math.cos(angle) * radius,
+        y: centerY + Math.sin(angle) * radius,
+        vx: 0,
+        vy: 0
+      };
+
+      nodes.push(node);
+      nodeById[id] = node;
+      return node;
+    }
+
+    posts.forEach(function (post, index) {
+      var postNode = upsertNode('post-' + index, 'post', post.title, post.url);
+      var categories = post.categories || [];
+      var tags = post.tags || [];
+
+      postNode.count = 1;
+      postNode.categories = categories;
+      postNode.tags = tags;
+
+      categories.forEach(function (category) {
+        var categorySlug = slug(category);
+        var categoryNode = upsertNode(
+          'category-' + categorySlug,
+          'category',
+          category,
+          categoryUrls[categorySlug] || ''
+        );
+        connect(categoryNode, postNode, edges);
+      });
+
+      tags.forEach(function (tag) {
+        var tagNode = upsertNode('tag-' + slug(tag), 'tag', tag, '/tags#tag-' + slug(tag));
+        connect(postNode, tagNode, edges);
+      });
     });
-    tagIds.forEach(function (tagId) {
-      activeTags[tagId] = true;
-    });
 
-    edges.forEach(function (edge) {
-      var active = (!tagIds.length || includes(tagIds, edge.tag.id)) &&
-        (!tagIds.length || activePostIds[edge.post.id]) &&
-        (!postId || edge.post.id === postId);
-
-      edge.path.classList.toggle('is-active', active);
-      edge.path.classList.toggle('is-muted', !active);
-
-      if (active) {
-        activeTags[edge.tag.id] = true;
-        activePosts[edge.post.id] = true;
+    nodes.forEach(function (node) {
+      if (node.kind === 'category') {
+        node.radius = 9 + Math.min(7, node.count * 1.2);
+        node.homeX = width * 0.23;
+        node.homeY = centerY;
+      } else if (node.kind === 'tag') {
+        node.radius = 7 + Math.min(8, node.count * 1.1);
+        node.homeX = width * 0.76;
+        node.homeY = centerY;
+      } else {
+        node.radius = 7;
+        node.homeX = centerX;
+        node.homeY = centerY;
       }
     });
 
-    tagConnections.forEach(function (connection) {
-      var active = false;
+    return {
+      nodes: nodes,
+      edges: edges
+    };
+  }
 
-      if (tagIds.length) {
-        active = (includes(tagIds, connection.left.id) || includes(tagIds, connection.right.id)) &&
-          (!postId || connection.sharedPosts.some(function (post) {
-            return post.id === postId;
-          }));
+  function connect(source, target, edges) {
+    edges.push({
+      source: source,
+      target: target
+    });
+    source.links.push(target);
+    target.links.push(source);
+  }
 
-        if (tagIds.length > 1) {
-          active = active && tagIds.every(function (tagId) {
-            return connection.left.id === tagId || connection.right.id === tagId ||
-              connection.sharedPosts.some(function (post) {
-                return tagIdLookup[tagId] && includes(post.tags, tagIdLookup[tagId].name);
-              });
-          });
+  function spacingScale() {
+    return spacingLevels[spacing] || spacingLevels.roomy;
+  }
+
+  function restartSimulation() {
+    frame = 0;
+    model.nodes.forEach(function (node) {
+      node.fx = null;
+      node.fy = null;
+      node.vx = 0;
+      node.vy = 0;
+    });
+
+    if (motionOK) {
+      requestAnimationFrame(run);
+    } else {
+      for (var i = 0; i < maxFrames; i += 1) {
+        simulate();
+      }
+      tick();
+    }
+  }
+
+  function run() {
+    simulate();
+    tick();
+    frame += 1;
+
+    if (frame < maxFrames || draggedNode) {
+      requestAnimationFrame(run);
+    }
+  }
+
+  function simulate() {
+    var nodes = model.nodes;
+    var edges = model.edges;
+    var alpha = Math.max(0.015, 1 - frame / maxFrames);
+
+    edges.forEach(function (edge) {
+      var dx = edge.target.x - edge.source.x;
+      var dy = edge.target.y - edge.source.y;
+      var distance = Math.sqrt(dx * dx + dy * dy) || 1;
+      var ideal = (edge.source.kind === 'post' && edge.target.kind === 'tag' ? 118 : 132) * spacingScale();
+      var force = (distance - ideal) * 0.018 * alpha;
+      var fx = dx / distance * force;
+      var fy = dy / distance * force;
+
+      if (edge.source.fx === null || edge.source.fx === undefined) {
+        edge.source.vx += fx;
+        edge.source.vy += fy;
+      }
+      if (edge.target.fx === null || edge.target.fx === undefined) {
+        edge.target.vx -= fx;
+        edge.target.vy -= fy;
+      }
+    });
+
+    nodes.forEach(function (left, leftIndex) {
+      nodes.slice(leftIndex + 1).forEach(function (right) {
+        var dx = right.x - left.x;
+        var dy = right.y - left.y;
+        var distanceSq = dx * dx + dy * dy || 1;
+        var minDistance = left.radius + right.radius + 28 * spacingScale();
+        var strength = Math.min(3.2, (1180 * spacingScale()) / distanceSq) * alpha;
+
+        if (distanceSq < minDistance * minDistance) {
+          strength += (minDistance - Math.sqrt(distanceSq)) * 0.03;
         }
-      } else if (postId) {
-        active = connection.sharedPosts.some(function (post) {
-          return post.id === postId;
+
+        var distance = Math.sqrt(distanceSq);
+        var fx = dx / distance * strength;
+        var fy = dy / distance * strength;
+
+        if (left.fx === null || left.fx === undefined) {
+          left.vx -= fx;
+          left.vy -= fy;
+        }
+        if (right.fx === null || right.fx === undefined) {
+          right.vx += fx;
+          right.vy += fy;
+        }
+      });
+    });
+
+    nodes.forEach(function (node) {
+      if (node.fx === null || node.fx === undefined) {
+        node.vx += (node.homeX - node.x) * 0.0045 * alpha;
+        node.vy += (node.homeY - node.y) * 0.0045 * alpha;
+        node.vx *= 0.82;
+        node.vy *= 0.82;
+        node.x += node.vx;
+        node.y += node.vy;
+      } else {
+        node.x = node.fx;
+        node.y = node.fy;
+      }
+
+      node.x = clamp(node.x, 24, width - 120);
+      node.y = clamp(node.y, 24, height - 24);
+    });
+  }
+
+  function tick() {
+    model.edges.forEach(function (edge) {
+      edge.el.setAttribute('x1', edge.source.x);
+      edge.el.setAttribute('y1', edge.source.y);
+      edge.el.setAttribute('x2', edge.target.x);
+      edge.el.setAttribute('y2', edge.target.y);
+    });
+
+    model.nodes.forEach(function (node) {
+      node.el.setAttribute('transform', 'translate(' + node.x.toFixed(2) + ' ' + node.y.toFixed(2) + ')');
+    });
+  }
+
+  function renderLegend() {
+    var legend = createElement('div', 't-hackcss-tag-legend');
+    [
+      ['category', 'Categories'],
+      ['post', 'Posts'],
+      ['tag', 'Tags']
+    ].forEach(function (item) {
+      var entry = createElement('span', 't-hackcss-tag-legend-item');
+      var mark = createElement('span', 't-hackcss-tag-legend-mark t-hackcss-tag-legend-mark-' + item[0]);
+      entry.appendChild(mark);
+      entry.appendChild(document.createTextNode(item[1]));
+      legend.appendChild(entry);
+    });
+    graph.appendChild(legend);
+  }
+
+  function renderSpacingControls() {
+    var controls = createElement('div', 't-hackcss-tag-spacing');
+    var label = createElement('span', 't-hackcss-tag-spacing-label', 'Spacing');
+
+    controls.appendChild(label);
+    ['tight', 'normal', 'roomy'].forEach(function (level) {
+      var button = createElement(
+        'button',
+        't-hackcss-tag-spacing-button' + (spacing === level ? ' is-selected' : ''),
+        level.charAt(0).toUpperCase() + level.slice(1)
+      );
+
+      button.type = 'button';
+      button.setAttribute('data-spacing', level);
+      button.setAttribute('aria-pressed', String(spacing === level));
+      button.addEventListener('click', function () {
+        spacing = level;
+        graph.querySelectorAll('.t-hackcss-tag-spacing-button').forEach(function (node) {
+          var selected = node.getAttribute('data-spacing') === spacing;
+          node.classList.toggle('is-selected', selected);
+          node.setAttribute('aria-pressed', String(selected));
+        });
+        restartSimulation();
+      });
+
+      controls.appendChild(button);
+    });
+
+    graph.insertBefore(controls, svg);
+  }
+
+  function relatedIds(node) {
+    var ids = {};
+    ids[node.id] = true;
+    node.links.forEach(function (linked) {
+      ids[linked.id] = true;
+      if (node.kind !== 'post') {
+        linked.links.forEach(function (second) {
+          ids[second.id] = true;
         });
       }
-
-      connection.path.classList.toggle('is-active', active);
-      connection.path.classList.toggle('is-muted', !active);
-
-      if (active) {
-        activeTags[connection.left.id] = true;
-        activeTags[connection.right.id] = true;
-      }
     });
-
-    svg.querySelectorAll('.t-hackcss-tag-graph-tag').forEach(function (node) {
-      var id = node.getAttribute('data-tag');
-      node.classList.toggle('is-active', Boolean(activeTags[id]));
-      node.classList.toggle('is-muted', !activeTags[id]);
-    });
-
-    svg.querySelectorAll('.t-hackcss-tag-graph-post').forEach(function (node) {
-      var id = node.getAttribute('data-post');
-      node.classList.toggle('is-active', Boolean(activePosts[id]));
-      node.classList.toggle('is-muted', !activePosts[id]);
-    });
+    return ids;
   }
 
-  function clearActive() {
-    svg.querySelectorAll('.is-active, .is-muted').forEach(function (node) {
-      node.classList.remove('is-active');
-      node.classList.remove('is-muted');
-    });
+  function currentFocusNode() {
+    var id = hoveredId || selectedId;
+    return model.nodes.filter(function (node) {
+      return node.id === id;
+    })[0];
   }
 
-  function applySelection() {
-    if (selectedTagIds.length) {
-      setActive(selectedTagIds);
-    } else {
-      clearActive();
-    }
+  function applyFocus() {
+    var focus = currentFocusNode();
+    var ids = focus ? relatedIds(focus) : {};
+    var activeEdge = {};
 
-    svg.querySelectorAll('.t-hackcss-tag-graph-link[data-tag]').forEach(function (node) {
-      node.setAttribute('aria-pressed', String(includes(selectedTagIds, node.getAttribute('data-tag'))));
-    });
-
-    svg.querySelectorAll('.t-hackcss-tag-graph-tag').forEach(function (node) {
-      node.classList.toggle('is-selected', includes(selectedTagIds, node.getAttribute('data-tag')));
-    });
-
-    graph.querySelectorAll('.t-hackcss-tag-filter').forEach(function (node) {
-      var selected = includes(selectedTagIds, node.getAttribute('data-tag'));
-      node.classList.toggle('is-selected', selected);
-      node.setAttribute('aria-pressed', String(selected));
-    });
-
-    if (resetButton) {
-      resetButton.disabled = !selectedTagIds.length;
-    }
-
-    renderInsight();
-  }
-
-  function selectTag(tagId) {
-    if (includes(selectedTagIds, tagId)) {
-      selectedTagIds = selectedTagIds.filter(function (selectedTagId) {
-        return selectedTagId !== tagId;
+    if (focus) {
+      model.edges.forEach(function (edge) {
+        if (ids[edge.source.id] && ids[edge.target.id]) {
+          activeEdge[edge.source.id + '|' + edge.target.id] = true;
+        }
       });
-    } else {
-      selectedTagIds = selectedTagIds.concat(tagId);
     }
 
-    applySelection();
-  }
-
-  function selectTagFromHash() {
-    var hash = window.location.hash.replace(/^#/, '');
-    var hashTags = hash.split(',').filter(Boolean);
-
-    selectedTagIds = hashTags.filter(function (tagId) {
-      return Boolean(tagIdLookup[tagId]);
+    model.nodes.forEach(function (node) {
+      var active = !focus || Boolean(ids[node.id]);
+      node.el.classList.toggle('is-muted', !active);
+      node.el.classList.toggle('is-selected', selectedId === node.id);
+      node.el.classList.toggle('is-hovered', hoveredId === node.id);
     });
 
-    applySelection();
+    model.edges.forEach(function (edge) {
+      var key = edge.source.id + '|' + edge.target.id;
+      var active = !focus || Boolean(activeEdge[key]);
+      edge.el.classList.toggle('is-muted', !active);
+      edge.el.classList.toggle('is-active', focus && active);
+    });
   }
 
   function updateHash() {
-    if (selectedTagIds.length) {
-      window.location.hash = selectedTagIds.join(',');
+    if (selectedId) {
+      history.pushState('', document.title, window.location.pathname + window.location.search + '#' + selectedId);
     } else if (window.location.hash) {
       history.pushState('', document.title, window.location.pathname + window.location.search);
     }
   }
 
-  function createElement(name, className, text) {
-    var node = document.createElement(name);
+  function selectFromHash() {
+    var hash = window.location.hash.replace(/^#/, '');
+    var direct = model.nodes.filter(function (node) {
+      return node.id === hash;
+    })[0];
+    var legacyTag = model.nodes.filter(function (node) {
+      return node.id === 'tag-' + hash.replace(/^tag-/, '');
+    })[0];
 
-    if (className) {
-      node.className = className;
-    }
-
-    if (text) {
-      node.textContent = text;
-    }
-
-    return node;
+    selectedId = direct ? direct.id : (legacyTag ? legacyTag.id : '');
+    renderInsight();
+    applyFocus();
   }
 
-  function resetSelection() {
-    selectedTagIds = [];
-    applySelection();
-    updateHash();
-  }
-
-  function renderResetButton() {
-    var actions = createElement('div', 't-hackcss-tag-actions');
-
-    resetButton = createElement('button', 't-hackcss-tag-reset', 'Reset');
-    resetButton.type = 'button';
-    resetButton.disabled = true;
-    resetButton.addEventListener('click', resetSelection);
-
-    actions.appendChild(resetButton);
-    graph.insertBefore(actions, svg);
-  }
-
-  function renderMobileTagList() {
-    mobileTagList = createElement('div', 't-hackcss-tag-filter-list');
-
-    tagNodes.forEach(function (tag) {
-      var button = createElement('button', 't-hackcss-tag-filter');
-      var count = createElement('span', null, String(tag.count));
-
-      button.type = 'button';
-      button.setAttribute('data-tag', tag.id);
-      button.setAttribute('aria-pressed', 'false');
-      button.appendChild(document.createTextNode(tag.name));
-      button.appendChild(count);
-      button.addEventListener('click', function () {
-        selectTag(tag.id);
-        updateHash();
-      });
-
-      mobileTagList.appendChild(button);
-    });
-
-    graph.appendChild(mobileTagList);
-  }
-
-  function countCategories(posts) {
-    var categories = {};
-
-    posts.forEach(function (post) {
-      post.categories.forEach(function (category) {
-        categories[category] = (categories[category] || 0) + 1;
-      });
-    });
-
-    return Object.keys(categories).sort(function (left, right) {
-      return categories[right] - categories[left] || left.localeCompare(right);
-    }).map(function (category) {
-      return {
-        name: category,
-        count: categories[category]
-      };
-    });
-  }
-
-  function relatedTagsForSelection(posts, selectedNames) {
-    var related = {};
-
-    posts.forEach(function (post) {
-      post.tags.forEach(function (tagName) {
-        if (includes(selectedNames, tagName)) {
-          return;
-        }
-
-        related[tagName] = (related[tagName] || 0) + 1;
-      });
-    });
-
-    if (!Object.keys(related).length && selectedTagIds.length) {
-      tagConnections.forEach(function (connection) {
-        [connection.left, connection.right].forEach(function (tag) {
-          if (!includes(selectedTagIds, tag.id)) {
-            return;
-          }
-
-          var other = connection.left.id === tag.id ? connection.right : connection.left;
-          if (!includes(selectedNames, other.name)) {
-            related[other.name] = Math.max(related[other.name] || 0, connection.sharedPosts.length);
-          }
-        });
+  function postsForNode(node) {
+    if (!node) {
+      return model.nodes.filter(function (candidate) {
+        return candidate.kind === 'post';
       });
     }
 
-    return Object.keys(related).map(function (tagName) {
-      return {
-        tag: tagLookup[tagName],
-        count: related[tagName]
-      };
-    }).filter(function (relatedTag) {
-      return relatedTag.tag;
+    if (node.kind === 'post') {
+      return [node];
+    }
+
+    return node.links.filter(function (candidate) {
+      return candidate.kind === 'post';
     }).sort(function (left, right) {
-      return right.count - left.count || left.tag.name.localeCompare(right.tag.name);
+      return left.name.localeCompare(right.name);
     });
   }
 
-  function renderPostList(posts) {
-    var list = createElement('ol', 't-hackcss-tag-insight-posts');
-
-    posts.forEach(function (post) {
-      var item = createElement('li');
-      var link = createElement('a', null, post.title);
-      link.href = post.url;
-      item.appendChild(link);
-      list.appendChild(item);
+  function nodesByKind(kind) {
+    return model.nodes.filter(function (node) {
+      return node.kind === kind;
+    }).sort(function (left, right) {
+      return right.count - left.count || left.name.localeCompare(right.name);
     });
-
-    return list;
-  }
-
-  function renderRelatedTags(relatedTags, baseTagIds) {
-    var list = createElement('ul', 't-hackcss-tag-insight-tags');
-    baseTagIds = baseTagIds || [];
-
-    relatedTags.forEach(function (related) {
-      var item = createElement('li');
-      var link = createElement('a', null, related.tag.name);
-      var count = createElement('span', null, String(related.count));
-
-      link.href = '#' + baseTagIds.concat(related.tag.id).join(',');
-      item.appendChild(link);
-      item.appendChild(count);
-      list.appendChild(item);
-    });
-
-    return list;
-  }
-
-  function renderCategories(categories) {
-    var list = createElement('ul', 't-hackcss-tag-insight-tags t-hackcss-tag-insight-categories');
-
-    categories.forEach(function (category) {
-      var item = createElement('li');
-      var count = createElement('span', null, String(category.count));
-
-      item.appendChild(document.createTextNode(category.name));
-      item.appendChild(count);
-      list.appendChild(item);
-    });
-
-    return list;
-  }
-
-  function renderSection(title, content) {
-    var section = createElement('section', 't-hackcss-tag-insight-section');
-    section.appendChild(createElement('h3', null, title));
-    section.appendChild(content);
-    return section;
   }
 
   function renderInsight() {
@@ -545,79 +581,99 @@
       return;
     }
 
+    var node = currentFocusNode();
+    var posts = postsForNode(node);
     insight.innerHTML = '';
 
-    if (!selectedTagIds.length) {
-      var totalPosts = postNodes.length;
-      var summary = createElement(
+    if (!node) {
+      insight.appendChild(createElement(
         'p',
         't-hackcss-tag-insight-summary',
-        tagNodes.length + ' tags across ' + totalPosts + ' tagged ' + (totalPosts === 1 ? 'post' : 'posts') + '.'
-      );
-      var topTags = tagNodes.slice(0, 6).map(function (tag) {
-        return {
-          tag: tag,
-          count: tag.count
-        };
-      });
-
-      insight.appendChild(summary);
-      insight.appendChild(renderSection('Frequent tags', renderRelatedTags(topTags)));
-      insight.appendChild(renderSection('Categories', renderCategories(countCategories(postNodes))));
+        model.nodes.length + ' nodes connect ' + data.posts.length + ' posts, ' +
+        nodesByKind('category').length + ' categories, and ' + nodesByKind('tag').length + ' tags.'
+      ));
+      insight.appendChild(renderNodeSection('Categories', nodesByKind('category')));
+      insight.appendChild(renderNodeSection('Frequent tags', nodesByKind('tag').slice(0, 12)));
       return;
     }
 
-    var selectedNames = selectedTagNames();
-    var posts = postsForTags(selectedNames);
-    var relatedTags = relatedTagsForSelection(posts, selectedNames);
-    var selectedHeading = createElement('h2', null, selectedNames.join(' + '));
-    var selectedSummary = createElement(
+    insight.appendChild(createElement('h2', null, node.name));
+    insight.appendChild(createElement(
       'p',
       't-hackcss-tag-insight-summary',
-      selectedNames.length + ' selected ' + (selectedNames.length === 1 ? 'tag' : 'tags') +
-      ' match ' + posts.length + ' ' + (posts.length === 1 ? 'post' : 'posts') + '.'
-    );
+      node.kind.charAt(0).toUpperCase() + node.kind.slice(1) + ' linked to ' +
+      posts.length + ' ' + (posts.length === 1 ? 'post' : 'posts') + '.'
+    ));
 
-    insight.appendChild(selectedHeading);
-    insight.appendChild(selectedSummary);
-
-    // if (posts.length) {
-    //   insight.appendChild(renderSection('Categories', renderCategories(countCategories(posts))));
-    // }
-
-    if (relatedTags.length) {
-      insight.appendChild(renderSection('Related tags', renderRelatedTags(relatedTags, selectedTagIds)));
-    }
-
-    if (posts.length) {
-      insight.appendChild(renderSection('Posts', renderPostList(posts)));
+    if (node.kind === 'post') {
+      insight.appendChild(renderNodeSection('Categories', node.links.filter(byKind('category'))));
+      insight.appendChild(renderNodeSection('Tags', node.links.filter(byKind('tag'))));
+    } else {
+      insight.appendChild(renderPostSection('Posts', posts));
+      insight.appendChild(renderNodeSection('Related tags', relatedTags(posts, node)));
     }
   }
 
-  svg.querySelectorAll('.t-hackcss-tag-graph-link').forEach(function (node) {
-    node.addEventListener('mouseenter', function () {
-      var tagId = node.getAttribute('data-tag');
-      setActive(tagId ? [tagId] : [], node.getAttribute('data-post'));
-    });
-    node.addEventListener('mouseleave', applySelection);
-    node.addEventListener('focus', function () {
-      var tagId = node.getAttribute('data-tag');
-      setActive(tagId ? [tagId] : [], node.getAttribute('data-post'));
-    });
-    node.addEventListener('blur', applySelection);
-    node.addEventListener('click', function (event) {
-      var tagId = node.getAttribute('data-tag');
+  function byKind(kind) {
+    return function (node) {
+      return node.kind === kind;
+    };
+  }
 
-      if (!tagId) {
-        return;
-      }
-
-      event.preventDefault();
-      selectTag(tagId);
-      updateHash();
+  function relatedTags(posts, selectedNode) {
+    var seen = {};
+    posts.forEach(function (post) {
+      post.links.filter(byKind('tag')).forEach(function (tag) {
+        if (tag.id !== selectedNode.id) {
+          seen[tag.id] = tag;
+        }
+      });
     });
-  });
+    return Object.keys(seen).map(function (id) {
+      return seen[id];
+    }).sort(function (left, right) {
+      return right.count - left.count || left.name.localeCompare(right.name);
+    });
+  }
 
-  window.addEventListener('hashchange', selectTagFromHash);
-  selectTagFromHash();
+  function renderNodeSection(title, nodes) {
+    var section = createElement('section', 't-hackcss-tag-insight-section');
+    var list = createElement('ul', 't-hackcss-tag-insight-tags');
+
+    section.appendChild(createElement('h3', null, title));
+    if (!nodes.length) {
+      section.appendChild(createElement('p', null, 'None.'));
+      return section;
+    }
+
+    nodes.forEach(function (node) {
+      var item = createElement('li');
+      var link = createElement('a', null, node.name);
+      var count = createElement('span', null, String(node.count));
+      link.href = '#' + node.id;
+      item.className = node.kind === 'category' ? 't-hackcss-tag-insight-category' : '';
+      item.appendChild(link);
+      item.appendChild(count);
+      list.appendChild(item);
+    });
+
+    section.appendChild(list);
+    return section;
+  }
+
+  function renderPostSection(title, posts) {
+    var section = createElement('section', 't-hackcss-tag-insight-section');
+    var list = createElement('ol', 't-hackcss-tag-insight-posts');
+
+    section.appendChild(createElement('h3', null, title));
+    posts.forEach(function (post) {
+      var item = createElement('li');
+      var link = createElement('a', null, post.name);
+      link.href = post.url;
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+    section.appendChild(list);
+    return section;
+  }
 })();

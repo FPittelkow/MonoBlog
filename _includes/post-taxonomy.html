@@ -1,0 +1,50 @@
+{% assign post = include.post %}
+{% assign has_categories = post.categories.size | plus: 0 %}
+{% assign has_tags = post.tags.size | plus: 0 %}
+
+{% if has_categories > 0 or has_tags > 0 %}
+  <div class="t-hackcss-post-overview" aria-label="Post overview">
+    {% if has_categories > 0 %}
+      <div class="t-hackcss-post-overview-row">
+        <span class="t-hackcss-post-overview-label">
+          {% if has_categories == 1 %}Category{% else %}Categories{% endif %}
+        </span>
+        <span class="t-hackcss-post-overview-items">
+          {% for category in post.categories %}
+            {% assign category_slug = category | slugify %}
+            {% assign category_url = nil %}
+            {% if category_slug == "text" %}
+              {% assign category_url = "/text" %}
+            {% elsif category_slug == "tools" %}
+              {% assign category_url = "/tools" %}
+            {% elsif category_slug == "artifact" %}
+              {% assign category_url = "/artifacts" %}
+            {% endif %}
+
+            {% if category_url %}
+              <a class="t-hackcss-post-tag t-hackcss-post-category"
+                 href="{{ category_url | prepend: site.baseurl }}">{{ category }}</a>
+            {% else %}
+              <span class="t-hackcss-post-tag t-hackcss-post-category">{{ category }}</span>
+            {% endif %}
+          {% endfor %}
+        </span>
+      </div>
+    {% endif %}
+
+    {% if has_tags > 0 %}
+      <div class="t-hackcss-post-overview-row">
+        <span class="t-hackcss-post-overview-label">
+          {% if has_tags == 1 %}Tag{% else %}Tags{% endif %}
+        </span>
+        <span class="t-hackcss-post-overview-items">
+          {% for tag in post.tags %}
+            {% assign tag_slug = tag | slugify %}
+            <a class="t-hackcss-post-tag"
+               href="{{ "/tags#tag-" | append: tag_slug | prepend: site.baseurl }}">{{ tag }}</a>
+          {% endfor %}
+        </span>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

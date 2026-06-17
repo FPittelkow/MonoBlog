@@ -150,15 +150,50 @@ $on-palm: 768px !default;
     margin-top: 0.35rem;
   }
 
+  &-post-overview {
+    margin-top: 0.65rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  &-post-overview-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.55rem;
+    align-items: baseline;
+  }
+
+  &-post-overview-row + &-post-overview-row {
+    margin-top: 0.3rem;
+  }
+
+  &-post-overview-label {
+    min-width: 5.5rem;
+    opacity: 0.68;
+  }
+
+  &-post-overview-items {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
   &-post-tag {
     display: inline-block;
-    margin-right: 0.35rem;
-    margin-bottom: 0.35rem;
     padding: 0.1rem 0.35rem;
     border: 1px solid currentColor;
     font-size: 0.85rem;
     line-height: 1.4;
     text-decoration: none;
+  }
+
+  &-post-tags &-post-tag {
+    margin-right: 0.35rem;
+    margin-bottom: 0.35rem;
+  }
+
+  &-post-category {
+    border-style: dashed;
   }
 
   &-search-count {
@@ -168,17 +203,82 @@ $on-palm: 768px !default;
   &-tag-graph {
     position: relative;
     width: 100%;
+    min-height: 32rem;
     margin-bottom: 2rem;
     overflow-x: auto;
     border-top: 1px solid currentColor;
     border-bottom: 1px solid currentColor;
+    background-image:
+      linear-gradient(rgba(37, 42, 46, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 42, 46, 0.08) 1px, transparent 1px);
+    background-size: 3rem 3rem;
+    background-position: center;
+    background-color: transparent;
+    background-blend-mode: normal;
   }
 
   &-tag-graph-svg {
     display: block;
     width: 100%;
-    min-width: 640px;
+    min-width: 58rem;
     height: auto;
+    min-height: 32rem;
+    touch-action: none;
+  }
+
+  &-tag-spacing {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid currentColor;
+    font-size: 0.85rem;
+  }
+
+  &-tag-spacing-label {
+    margin-right: 0.25rem;
+    opacity: 0.68;
+  }
+
+  &-tag-spacing-button {
+    min-height: 1.75rem;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid currentColor;
+    border-radius: 0;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    line-height: 1.25;
+    cursor: pointer;
+  }
+
+  &-tag-spacing-button.is-selected {
+    box-shadow: inset 0 0 0 1px currentColor;
+    font-weight: 700;
+  }
+
+  &-tag-spacing-button:focus {
+    outline: none;
+  }
+
+  &-tag-spacing-button:focus-visible {
+    box-shadow: inset 0 0 0 1px currentColor;
+  }
+
+  &-tag-graph-loading {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    margin: 0;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid currentColor;
+    background: #fff;
+  }
+
+  &-tag-graph-edges,
+  &-tag-graph-nodes {
+    color: inherit;
   }
 
   &-tag-actions {
@@ -221,11 +321,30 @@ $on-palm: 768px !default;
   }
 
   @at-root {
+    body.hack.dark .t-hackcss-tag-graph {
+      background-image:
+        linear-gradient(rgba(204, 204, 204, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(204, 204, 204, 0.12) 1px, transparent 1px);
+    }
+
+    body.hack.dark .t-hackcss-tag-graph-loading {
+      background: #000;
+    }
+
+    body.hack.dark .t-hackcss-tag-spacing-button {
+      background: #000;
+    }
+
     body.hack.dark .t-hackcss-tag-reset {
       background: #000;
     }
 
     @media (hover: hover) and (pointer: fine) {
+      body.hack.dark .t-hackcss-tag-spacing-button:hover {
+        background: #ccc;
+        color: #000;
+      }
+
       body.hack.dark .t-hackcss-tag-reset:not(:disabled):hover {
         background: #ccc;
         color: #000;
@@ -233,12 +352,19 @@ $on-palm: 768px !default;
     }
   }
 
+  @media (hover: hover) and (pointer: fine) {
+    &-tag-spacing-button:hover {
+      background: #252a2e;
+      color: #fff;
+    }
+  }
+
   &-tag-graph-edge {
     fill: none;
     stroke: currentColor;
-    stroke-opacity: 0.18;
+    stroke-opacity: 0.2;
     stroke-width: 1;
-    transition: stroke-opacity 0.15s ease, stroke-width 0.15s ease;
+    transition: opacity 0.15s ease, stroke-opacity 0.15s ease, stroke-width 0.15s ease;
   }
 
   &-tag-graph-tag-edge {
@@ -248,6 +374,32 @@ $on-palm: 768px !default;
     stroke-opacity: 0.12;
     stroke-width: 1;
     transition: opacity 0.15s ease, stroke-opacity 0.15s ease, stroke-width 0.15s ease;
+  }
+
+  &-tag-graph-node {
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+
+  &-tag-graph-hit {
+    fill: transparent;
+    stroke: transparent;
+  }
+
+  &-tag-graph-dot {
+    fill: #fff;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    transition: fill 0.15s ease, stroke-width 0.15s ease;
+  }
+
+  &-tag-graph-node[data-kind="category"] &-tag-graph-dot {
+    fill: currentColor;
+  }
+
+  &-tag-graph-node[data-kind="post"] &-tag-graph-dot {
+    fill: transparent;
+    stroke-width: 1.4;
   }
 
   &-tag-graph-tag {
@@ -272,6 +424,11 @@ $on-palm: 768px !default;
     pointer-events: none;
   }
 
+  &-tag-graph-node[data-kind="post"] &-tag-graph-label {
+    font-size: 11px;
+    opacity: 0.82;
+  }
+
   &-tag-graph-post-label {
     font-size: 11px;
   }
@@ -292,6 +449,10 @@ $on-palm: 768px !default;
     color: inherit;
   }
 
+  &-tag-graph-link.is-dragging {
+    cursor: grabbing;
+  }
+
   &-tag-graph-link:hover &-tag-graph-tag,
   &-tag-graph-link:focus &-tag-graph-tag,
   &-tag-graph-link:hover &-tag-graph-post,
@@ -301,8 +462,8 @@ $on-palm: 768px !default;
   }
 
   &-tag-graph-edge.is-active {
-    stroke-opacity: 0.85;
-    stroke-width: 2;
+    stroke-opacity: 0.82;
+    stroke-width: 1.8;
   }
 
   &-tag-graph-tag-edge.is-active {
@@ -312,9 +473,21 @@ $on-palm: 768px !default;
 
   &-tag-graph-edge.is-muted,
   &-tag-graph-tag-edge.is-muted,
+  &-tag-graph-node.is-muted,
   &-tag-graph-tag.is-muted,
   &-tag-graph-post.is-muted {
-    opacity: 0.18;
+    opacity: 0.14;
+  }
+
+  &-tag-graph-node.is-hovered &-tag-graph-dot,
+  &-tag-graph-node.is-selected &-tag-graph-dot {
+    fill: currentColor;
+    stroke-width: 2;
+  }
+
+  &-tag-graph-node[data-kind="category"].is-hovered &-tag-graph-dot,
+  &-tag-graph-node[data-kind="category"].is-selected &-tag-graph-dot {
+    fill: #fff;
   }
 
   &-tag-graph-tag.is-active,
@@ -331,6 +504,39 @@ $on-palm: 768px !default;
   &-tag-graph-link:focus &-tag-graph-tag.is-selected {
     fill: currentColor;
     fill-opacity: 0.06;
+  }
+
+  &-tag-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid currentColor;
+    font-size: 0.85rem;
+  }
+
+  &-tag-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  &-tag-legend-mark {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+  }
+
+  &-tag-legend-mark-category {
+    background: currentColor;
+  }
+
+  &-tag-legend-mark-post {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: transparent;
   }
 
   &-tag-insight {
@@ -383,6 +589,10 @@ $on-palm: 768px !default;
   }
 
   &-tag-insight-categories li {
+    border-style: dashed;
+  }
+
+  &-tag-insight-category {
     border-style: dashed;
   }
 
