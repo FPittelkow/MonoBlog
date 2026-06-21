@@ -17,14 +17,14 @@ future: false
 timezone: Europe/Brussels
 
 # Build settings
-markdown: kramdown
+#markdown: kramdown
 
 # Sass settings
 sass:
   style: compressed
 
 # Theme settings
-theme_mode: standard  # choices are: 'dark', 'standard', 'markdown'
+theme_mode: dark  # choices are: 'dark', 'standard', 'markdown'
 
 plugins:
   - jekyll-seo-tag
