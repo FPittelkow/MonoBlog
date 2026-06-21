@@ -1,9 +1,10 @@
 ---
 layout: post
 title: the future is backwards
-categories: video
+categories: links
 date: 2026-06-21 Europe/Brussel
 tags:
+  - video
   - future
   - design
   - ui-ux
