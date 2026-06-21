@@ -2,7 +2,7 @@
 layout: post
 title: the future is backwards
 categories: video
-date: 2026-05-05 Europe/Brussel
+date: 2026-06-21 Europe/Brussel
 tags:
   - future
   - design
