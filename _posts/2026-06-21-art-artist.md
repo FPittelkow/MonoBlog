@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Inextricable Connection Between Art and Artist: An Analytical Exploration"
-date: 2026-06-21 09:10:00
+date: 2026-06-21 09:10:00 Europe/Brussels
 categories: text
 tags:
   - artist
