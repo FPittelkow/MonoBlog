@@ -42,6 +42,10 @@ navigation:
 
   - text: Text
     url: /text
+  - text: Notes
+    url: /notes
+  - text: Links
+    url: /links
   - text: Tools
     url: /tools
   - text: Artifacts
