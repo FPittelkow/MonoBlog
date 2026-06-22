@@ -2,7 +2,7 @@
 layout: post
 title: the future is backwards
 categories: links
-date: 2026-06-21 13:00:00 Europe/Brussel
+date: 2026-06-22 Europe/Brussel
 tags:
   - video
   - future
