@@ -1,7 +1,11 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 source "https://rubygems.org"
 
-ruby "4.0.5"
+ruby "3.4.9"
 
 gem "jekyll"
-gem "jekyll-seo-tag"
+
+group :jekyll_plugins do
+  gem "jekyll-seo-tag"
+  gem "jekyll_picture_tag"
+end
