@@ -13,4 +13,8 @@ Super cool video from AOKI takamasa.
 
 Searching for a way to recreate this.
 
-<iframe width="1713" height="831" src="https://www.youtube.com/embed/3b5z3z6J44s?list=WL" title="AOKI takamasa // rhythm variation 02" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+
+
+<iframe width="1194" height="672" src="https://www.youtube.com/embed/3b5z3z6J44s" title="AOKI takamasa // rhythm variation 02" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
