@@ -1,6 +1,6 @@
 ---
 author: monointerferenz
-categories: Artifact
+categories: artifact
 date: 2026-07-03
 layout: post
 tags:
