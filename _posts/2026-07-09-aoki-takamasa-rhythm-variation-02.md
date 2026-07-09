@@ -8,12 +8,9 @@ tags:
 - music
 title: AOKI takamasa // rhythm variation 02
 ---
-
-Super cool video from AOKI takamasa.
+<a href="https://www.youtube.com/watch?v=3b5z3z6J44s" target="_blank">Super cool video from AOKI takamasa.</a>
 
 Searching for a way to recreate this.
-
-
 
 
 
