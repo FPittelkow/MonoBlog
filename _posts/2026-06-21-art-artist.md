@@ -8,6 +8,9 @@ tags:
   - art
 short_description: Can you seperate art from the artist?
 ---
+
+[TOC]
+
 The intricate symbiosis between a piece of art and its creator transcends the mere physicality of the artwork itself. This essay investigates the essential link between an art piece and its originator through five distinct lenses: socialisation, historical backdrop, spatiotemporal determinants, cultural milieu, and the transformation of the work over time. By scrutinising these facets, the aim is to elucidate the indivisibility of this bond and its profound importance for the comprehension and interpretation of art.
 
 ## Socialisation
