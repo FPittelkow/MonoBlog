@@ -8,7 +8,7 @@ tags:
   - art
 short_description: Can you seperate art from the artist?
 ---
-The relationship between a work of art and its creator extends far beyond the artwork's physical form. This essay examines that essential connection through four lenses: the artist's socialisation, the historical setting in which the work was created, its cultural context, and its evolution over time. Exploring these dimensions reveals the depth of the bond between art and artist—and shows why that bond matters when we seek to understand and interpret art.
+The relationship between a work of art and its creator extends far beyond the artwork's physical form. This essay examines that essential connection through four lenses: the artist's socialisation, the historical setting in which the work was created, its cultural context, and its evolution over time. Exploring these dimensions reveals the depth of the bond between art and artist and shows why that bond matters when we seek to understand and interpret art.
 
 ## Socialisation
 
