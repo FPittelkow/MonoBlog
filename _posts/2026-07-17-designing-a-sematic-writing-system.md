@@ -60,19 +60,19 @@ A strong version would seperate Layers:
 cards:
   A:
     type: claim
-    text: Industrial ruins create new ecological niches.
+    text: Water is good for you.
 
   B:
     type: source
-    text: Study about species diversity on post-industrial sites.
+    text: Study about the affects of water on the human body.
 
   C:
     type: claim
-    text: These niches are shaped by contamination and artificial materials.
+    text: You should drink more water.
 
   D:
     type: conclusion
-    text: Rewilding is therefore not a return to untouched nature, but an emergent hybrid ecology.
+    text: Water is indeed good for you and you should drink more of it.
 
 links:
   - from: B
