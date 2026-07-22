@@ -13,10 +13,8 @@ title: GPG with Apple Mail free
 Encrypting mails is awesome; the way is annoying.
 
 You can use the GPGSuite with the bundled plugin, but it is only available in the Support-Plan. 
-
 You support the project that way. 
 It's really cool, do that if you can.
-
 However, if you prefer an alternative free setup, you will need a different plugin for mail.
 
 ## Requirements
