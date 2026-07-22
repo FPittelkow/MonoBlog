@@ -9,10 +9,9 @@ tags:
 - development
 title: Designing a Sematic Writing System
 ---
+## Concept
 
 Key-Idea: **The text is not the primary object. The argument structure is.**
-
-## Concept
 
 - A writing assistant where the user builds a semantic graph of ideas, evidence, and argumentative relations; the LLM only transforms selected graph paths into prose. This process is semi-dynamic. Calculation times are normal behaviours. Quality > Realtime.
 
