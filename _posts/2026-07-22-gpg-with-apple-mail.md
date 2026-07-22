@@ -1,6 +1,6 @@
 ---
 author: monointerferenz
-categories: Notes
+categories: notes
 date: 2026-07-22
 layout: post
 tags:
