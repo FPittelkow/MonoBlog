@@ -7,34 +7,40 @@ tags:
 - gpg
 - macos
 - mail
-title: GPG with Apple Mail free
+title: GPG with Apple Mail
+---
+# Encrypting Mails is Awesome 
+
+Encrypting your email is *great* (in theory).
+
 ---
 
-Encrypting mails is awesome; the way is annoying.
+## Requirements (because “duh” just isn’t enough)
 
-You can use the GPGSuite with the bundled plugin, but it is only available in the Support-Plan. 
-You support the project that way. 
-It's really cool, do that if you can.
-However, if you prefer an alternative free setup, you will need a different plugin for mail.
+- **Apple Mail** – you already have this, so no points for effort.  
+- **[GPG Suite](https://gpgtools.org/)** – we’ll pretend the bundled plugin is a *nice* bonus, even though it’s locked behind the “Support‑Plan”. Pay up if you want the easy route; otherwise, congratulations on your free‑spirit.  
+- **[MailGPG](https://github.com/mahaupt/mailgpg)** – an alternative that actually works with a free setup. It needs **Homebrew** to install 
 
-## Requirements
-- Apple Mail (duh)
-- [GPG Suite](https://gpgtools.org/) (We only use the Keychain, it's included without cost)
-- [MailGPG](https://github.com/mahaupt/mailgpg)
-  - [Homebrew](https://brew.sh/)
+> *TL;DR*: If you’re happy paying for a “Support‑Plan”, feel free to use the GPG Suite plugin. Otherwise, you’ll need MailGPG and Homebrew.
 
-## Setup
-Install all the requirements, you know the spiel. You may need to allow the MailGPG-Plugin and activate it.
+---
 
-Do not use the Mail-Plugin from the GPG Suite.
+## Setup (the fun part)
 
-Use the GPG Keychain to generate your Key and to manage your keys. Upload them.
+1. **Install everything** – AppleMail (obviously), GPG Suite (if you’re into subscription models), MailGPG via Homebrew (`brew install --cask mailgpg` or whatever the brew formula is called).  
+2. **Allow & activate** the MailGPG plugin
+3. **Do NOT use** the “Mail‑Plugin” that ships with GPG Suite.
+4. **Key management**: generate your key (or import an existing one) using the GPG Keychain that ships with GPG Suite. Upload the public key somewhere, because strangers on the internet love receiving unsolicited encrypted blobs.  
+
+---
 
 ## Usage
-In the Mail-Composer, you'll see a new icon. There is your new plugin.
 
-{% picture default assets/gpg-with-apple-mail-free/GPGMail.png alt="" %}
+When you fire up a new message in AppleMail, you’ll notice a fresh little icon sitting pretty in the composer toolbar – that’s your newly‑installed plugin.
 
-When you use it for the first time, click in `Diagnostic` to set up the paths to your GPG installation. There is a guide.
+![GPG Mail Icon]({% picture default assets/gpg-with-apple-mail-free/GPGMail.png alt="" %})
 
-The plugin uses the shared keys on your Mac, managed by the GPGKeychain.
+- **First‑time setup**: hit `Diagnostic` inside the plugin, follow the guide to point it at your GPG installation.  
+- The plugin will then use the **shared keys** stored in your Mac’s GPG Keychain.
+
+---
