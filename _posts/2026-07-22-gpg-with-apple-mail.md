@@ -38,7 +38,7 @@ Encrypting your email is *great* (in theory).
 
 When you fire up a new message in AppleMail, you’ll notice a fresh little icon sitting pretty in the composer toolbar – that’s your newly‑installed plugin. Nice.
 
-![GPG Mail Icon]({% picture default assets/gpg-with-apple-mail-free/GPGMail.png alt="" %})
+{% picture default assets/gpg-with-apple-mail-free/GPGMail.png alt="" %}
 
 - **First‑time setup**: hit `Diagnostic` inside the plugin, follow the guide to point it at your GPG installation.  
 - The plugin will then use the **shared keys** stored in your Mac’s GPG Keychain.
