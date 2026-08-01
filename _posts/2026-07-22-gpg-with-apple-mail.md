@@ -18,10 +18,10 @@ Encrypting your email is *great* (in theory).
 ## Requirements (because “duh” just isn’t enough)
 
 - **Apple Mail** – you already have this, so no points for effort.  
-- **[GPG Suite](https://gpgtools.org/)** – we’ll pretend the bundled plugin is a *nice* bonus if you’re into subscription models, even though it’s locked behind the “Support‑Plan”. Pay up if you want the easy route; otherwise, congratulations on your free‑spirit.  
-- **[MailGPG](https://github.com/mahaupt/mailgpg)** – an alternative that actually works with a free setup. It needs **Homebrew** to install 
+- **[GPG Suite](https://gpgtools.org/)** – we’ll pretend the bundled plugin is a *nice* bonus, even though it’s locked behind the “Support‑Plan”. Pay up if you want the easy route; otherwise, congratulations on your free‑spirit.  
+- **[MailGPG](https://github.com/mahaupt/mailgpg)** – an alternative that actually works with a free setup. It needs **Homebrew** to install.
 
-> *TL;DR*: If you’re happy paying for a “Support‑Plan”, feel free to use the GPG Suite plugin. Otherwise, you’ll need MailGPG and Homebrew.
+> *TL;DR*: If you’re into subscription models pay for a “Support‑Plan”, feel free to use the GPG Suite plugin. Otherwise, you’ll need MailGPG and Homebrew.
 
 ---
 
